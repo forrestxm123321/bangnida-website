@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Bangnida - Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif}
+.bar{background:#e67e22;color:#fff;text-align:center;padding:12px;font-size:14px;font-weight:600;position:fixed;bottom:0;left:0;right:0;z-index:9999}
+.bar a{color:#fff;text-decoration:underline;margin:0 10px}
+#app{min-height:calc(100vh - 48px)}
+.container{max-width:1200px;margin:0 auto;padding:0 28px}
+</style>
+</head>
+<body>
+<div class="scroll-progress"><div class="scroll-progress-bar"></div></div>
+<div id="app">加载中...</div>
+<div class="bar"><i class="fas fa-eye"></i> 预览模式 · 数据来自后台 <a href="/admin/">返回后台</a></div>
+<script>
+try { var d = JSON.parse(localStorage.getItem('bn_data') || '{}'); } catch(e) { var d = {}; }
+var h = d.home || {};
+var imgs = d.imgs || {};
+
+function imgSrc(key, fallback) {
+  var i = imgs[key];
+  return (i && i.data) ? i.data : fallback;
+}
+function esc(s) { return String(s||'').replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m]||m}); }
+
+var html = '';
+// Hero
+html += '<div style="padding-top:76px;min-height:88vh;display:flex;align-items:center;position:relative;overflow:hidden;color:#fff;background:linear-gradient(135deg,rgba(10,25,41,.92),rgba(10,25,41,.55),rgba(10,25,41,.3)),url('+imgSrc('b1','/assets/images/banner-precision.svg')+');background-size:cover;background-position:center"><div class="container" style="position:relative;z-index:1;width:100%"><div style="max-width:720px">';
+if (h.badges) {
+  html += '<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:32px">';
+  h.badges.forEach(function(b){html+='<span style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.85);font-size:.85rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:8px 18px;border-radius:30px">'+esc(b)+'</span>'});
+  html += '</div>';
+}
+html += '<h1 style="font-size:3.5rem;margin-bottom:.35em;letter-spacing:-.04em;line-height:1.08;color:#fff">'+esc(h.title||'')+'</h1>';
+html += '<p style="color:rgba(255,255,255,.65);font-size:1.15rem;margin-bottom:2em;max-width:540px;line-height:1.7">'+esc(h.sub||'')+'</p>';
+html += '<div style="display:flex;gap:16px;flex-wrap:wrap"><a href="/get-quote.html" style="display:inline-flex;padding:16px 36px;border-radius:50px;background:linear-gradient(135deg,#e67e22,#f39c12);color:#fff;font-weight:600;text-decoration:none">Get Instant Quote</a></div>';
+if (h.stats) {
+  html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:60px;padding-top:40px;border-top:1px solid rgba(255,255,255,.08)">';
+  var labels = ['Years Experience','CNC Machines','Projects Delivered','On-Time Delivery'];
+  h.stats.forEach(function(s,i){html+='<div style="text-align:center"><span style="font-size:2.75rem;font-weight:800;display:block;line-height:1;margin-bottom:6px;background:linear-gradient(135deg,#f39c12,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+esc(s)+'</span><span style="font-size:.85rem;color:rgba(255,255,255,.45)">'+(labels[i]||'')+'</span></div>'});
+  html += '</div>';
+}
+html += '</div></div></div>';
+// Logo
+html += '<div style="position:fixed;top:16px;left:28px;z-index:100"><img src="'+imgSrc('logo','/assets/images/logo.svg')+'" style="height:38px"></div>';
+
+document.getElementById('app').innerHTML = html;
+</script>
+</body>
+</html>

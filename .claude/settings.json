@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"try{new Function\\(require\\('fs'\\).readFileSync\\('d:/my-projects/bangnida/website/admin/index.html','utf-8'\\).match\\(/<script>\\([\\\\s\\\\S]*?\\)<\\\\/script>/\\)[1]\\);console.log\\('JS: OK'\\)}catch\\(e\\){console.log\\('ERR:',e.message.substring\\(0,150\\)\\)}\")",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)"
+    ]
+  }
+}

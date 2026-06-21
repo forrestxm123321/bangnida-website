@@ -1,0 +1,145 @@
+# ============================================================
+# Bangnida CNC Machining - Apache Configuration
+# https://www.bangnida.com/
+# ============================================================
+
+# -----------------------------------------------------------
+# 1. Force HTTPS
+# -----------------------------------------------------------
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# -----------------------------------------------------------
+# 2. Redirect www to non-www
+# -----------------------------------------------------------
+RewriteCond %{HTTP_HOST} ^www\.bangnida\.com [NC]
+RewriteRule ^(.*)$ https://bangnida.com/$1 [R=301,L]
+
+# -----------------------------------------------------------
+# 3. Security Headers
+# -----------------------------------------------------------
+
+# Prevent MIME-type sniffing
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Enable HSTS (HTTP Strict Transport Security)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # XSS Protection (legacy browsers)
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# -----------------------------------------------------------
+# 4. Caching Headers
+# -----------------------------------------------------------
+
+# 1 year for static assets with versioned filenames (CSS, JS, images)
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    # HTML - 1 month
+    ExpiresByType text/html "access plus 1 month"
+
+    # CSS and JavaScript - 1 year
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/x-javascript "access plus 1 year"
+
+    # Images - 1 year
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+
+    # Fonts - 1 year
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+
+    # Media files
+    ExpiresByType video/mp4 "access plus 1 year"
+    ExpiresByType video/webm "access plus 1 year"
+
+    # PDF documents
+    ExpiresByType application/pdf "access plus 1 month"
+</IfModule>
+
+# Cache-Control overrides for better granularity
+<IfModule mod_headers.c>
+    # HTML - 1 month
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+
+    # CSS and JS - 1 year
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # Images and favicon - 1 year
+    <FilesMatch "\.(gif|png|jpe?g|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # Fonts - 1 year
+    <FilesMatch "\.(ttf|otf|woff|woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# -----------------------------------------------------------
+# 5. Gzip Compression
+# -----------------------------------------------------------
+<IfModule mod_deflate.c>
+    # Enable compression
+    SetOutputFilter DEFLATE
+
+    # Compress HTML, CSS, JavaScript, XML, JSON, etc.
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+    AddOutputFilterByType DEFLATE application/xml application/xhtml+xml application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject font/ttf font/otf font/woff font/woff2
+    AddOutputFilterByType DEFLATE image/svg+xml
+
+    # Remove browser bugs
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    Header append Vary User-Agent
+</IfModule>
+
+# -----------------------------------------------------------
+# 6. Prevent directory browsing
+# -----------------------------------------------------------
+Options -Indexes
+
+# -----------------------------------------------------------
+# 7. Custom error pages
+# -----------------------------------------------------------
+ErrorDocument 404 /404.html
+ErrorDocument 403 /403.html
+ErrorDocument 500 /500.html
+
+# -----------------------------------------------------------
+# 8. Protect sensitive files
+# -----------------------------------------------------------
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "(^#.*#|\.(bak|config|dist|fla|inc|ini|log|psd|sh|sql|swp|git|env)|~)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

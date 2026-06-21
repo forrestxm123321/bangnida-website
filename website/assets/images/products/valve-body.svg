@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="ss" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b8c0c8"/>
+      <stop offset="50%" stop-color="#d8e0e8"/>
+      <stop offset="100%" stop-color="#98a0a8"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0f2f5"/>
+      <stop offset="100%" stop-color="#e0e4ea"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="3" dy="5" stdDeviation="6" flood-opacity="0.18"/></filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#bgGrad)" rx="8"/>
+  <text x="400" y="35" text-anchor="middle" font-family="monospace" font-size="14" fill="#999">HYDRAULIC VALVE BODY — 316 STAINLESS STEEL</text>
+
+  <g filter="url(#shadow)">
+    <!-- Main body -->
+    <rect x="180" y="160" width="440" height="260" rx="20" fill="url(#ss)" stroke="#7a828a" stroke-width="2"/>
+
+    <!-- Top flange -->
+    <rect x="220" y="130" width="360" height="40" rx="8" fill="#c8d0d8" stroke="#7a828a" stroke-width="1.5"/>
+
+    <!-- Bottom flange -->
+    <rect x="220" y="410" width="360" height="40" rx="8" fill="#c8d0d8" stroke="#7a828a" stroke-width="1.5"/>
+
+    <!-- Side ports -->
+    <rect x="150" y="250" width="40" height="80" rx="8" fill="#c8d0d8" stroke="#7a828a" stroke-width="1.5"/>
+    <rect x="610" y="250" width="40" height="80" rx="8" fill="#c8d0d8" stroke="#7a828a" stroke-width="1.5"/>
+
+    <!-- Port holes -->
+    <circle cx="170" cy="290" r="16" fill="#6a727a"/>
+    <circle cx="170" cy="290" r="10" fill="#4a525a"/>
+    <circle cx="630" cy="290" r="16" fill="#6a727a"/>
+    <circle cx="630" cy="290" r="10" fill="#4a525a"/>
+
+    <!-- Top ports -->
+    <circle cx="300" cy="290" r="22" fill="#6a727a" stroke="#7a828a" stroke-width="1"/>
+    <circle cx="300" cy="290" r="14" fill="#4a525a"/>
+    <circle cx="500" cy="290" r="22" fill="#6a727a" stroke="#7a828a" stroke-width="1"/>
+    <circle cx="500" cy="290" r="14" fill="#4a525a"/>
+
+    <!-- Cross-drilled passages (dashed) -->
+    <line x1="300" y1="290" x2="500" y2="290" stroke="#e67e22" stroke-width="2" stroke-dasharray="8,4" opacity="0.5"/>
+    <line x1="170" y1="290" x2="300" y2="290" stroke="#e67e22" stroke-width="2" stroke-dasharray="8,4" opacity="0.5"/>
+    <line x1="500" y1="290" x2="630" y2="290" stroke="#e67e22" stroke-width="2" stroke-dasharray="8,4" opacity="0.5"/>
+
+    <!-- Mounting bolt holes -->
+    <circle cx="260" cy="150" r="6" fill="#4a525a"/>
+    <circle cx="540" cy="150" r="6" fill="#4a525a"/>
+    <circle cx="260" cy="450" r="6" fill="#4a525a"/>
+    <circle cx="540" cy="450" r="6" fill="#4a525a"/>
+
+    <!-- Thread indicators -->
+    <circle cx="300" cy="290" r="26" fill="none" stroke="#e67e22" stroke-width="0.8" stroke-dasharray="3,2"/>
+    <circle cx="500" cy="290" r="26" fill="none" stroke="#e67e22" stroke-width="0.8" stroke-dasharray="3,2"/>
+  </g>
+
+  <!-- Dimensions -->
+  <line x1="150" y1="480" x2="650" y2="480" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="150" y1="475" x2="150" y2="495" stroke="#e67e22" stroke-width="0.8"/>
+  <line x1="650" y1="475" x2="650" y2="495" stroke="#e67e22" stroke-width="0.8"/>
+  <text x="400" y="495" text-anchor="middle" font-family="monospace" font-size="11" fill="#e67e22">500.0 mm</text>
+
+  <!-- Cross drill callout -->
+  <line x1="320" y1="140" x2="320" y2="120" stroke="#e67e22" stroke-width="0.8"/>
+  <line x1="480" y1="140" x2="480" y2="120" stroke="#e67e22" stroke-width="0.8"/>
+  <line x1="320" y1="120" x2="480" y2="120" stroke="#e67e22" stroke-width="0.8"/>
+  <text x="400" y="115" text-anchor="middle" font-family="monospace" font-size="10" fill="#e67e22">CROSS-DRILLED Ø8 x 4 PASSAGES</text>
+
+  <!-- Specs -->
+  <rect x="30" y="510" width="740" height="75" rx="6" fill="#fff" stroke="#ddd" stroke-width="1" opacity="0.9"/>
+  <text x="50" y="532" font-family="monospace" font-size="11" fill="#333" font-weight="bold">SPECIFICATIONS:</text>
+  <text x="50" y="550" font-family="monospace" font-size="10" fill="#666">Material: 316 Stainless | Process: 4-Axis CNC Mill + Turning | Tolerance: ±0.02 mm | Finish: Electroless Nickel Plating | Pressure Rating: 3000 PSI | Ports: 6x G1/2 Threaded</text>
+  <text x="50" y="568" font-family="monospace" font-size="10" fill="#666">Surface Finish: 0.8 μm Ra internal passages | CMM Inspection: 100% | NDT: Dye Penetrant Tested</text>
+</svg>

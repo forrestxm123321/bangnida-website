@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="alu" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b4b8c0"/>
+      <stop offset="50%" stop-color="#d8dce4"/>
+      <stop offset="100%" stop-color="#9498a0"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0f2f5"/>
+      <stop offset="100%" stop-color="#e0e4ea"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="4" dy="6" stdDeviation="8" flood-opacity="0.2"/></filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#bgGrad)" rx="8"/>
+  <text x="400" y="35" text-anchor="middle" font-family="monospace" font-size="14" fill="#999">CUSTOM ALUMINUM ENCLOSURE — 6061-T6 — HARD ANODIZED</text>
+
+  <g filter="url(#shadow)">
+    <!-- Enclosure body - isometric-ish view -->
+    <path d="M 200 160 L 600 160 L 680 240 L 680 440 L 600 480 L 200 480 L 120 440 L 120 240 Z"
+          fill="url(#alu)" stroke="#7a7e86" stroke-width="2"/>
+
+    <!-- Top face -->
+    <path d="M 200 160 L 600 160 L 680 240 L 120 240 Z"
+          fill="#c8ccd4" stroke="#7a7e86" stroke-width="1.5"/>
+
+    <!-- Top pocket -->
+    <path d="M 230 180 L 570 180 L 630 230 L 170 230 Z"
+          fill="#6a6e76" opacity="0.15" stroke="#7a7e86" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Mounting holes on top -->
+    <circle cx="260" cy="180" r="5" fill="#3a3e46"/>
+    <circle cx="540" cy="180" r="5" fill="#3a3e46"/>
+    <circle cx="220" cy="220" r="5" fill="#3a3e46"/>
+    <circle cx="580" cy="220" r="5" fill="#3a3e46"/>
+
+    <!-- Side face detail -->
+    <rect x="140" y="280" width="60" height="20" rx="3" fill="#6a6e76" opacity="0.3" stroke="#7a7e86" stroke-width="0.5"/>
+    <rect x="140" y="320" width="80" height="20" rx="3" fill="#6a6e76" opacity="0.3" stroke="#7a7e86" stroke-width="0.5"/>
+    <rect x="140" y="360" width="60" height="20" rx="3" fill="#6a6e76" opacity="0.3" stroke="#7a7e86" stroke-width="0.5"/>
+
+    <!-- Connector cutouts on front -->
+    <circle cx="640" cy="280" r="16" fill="#4a4e56"/>
+    <circle cx="640" cy="280" r="10" fill="#2a2e36"/>
+    <rect x="630" y="315" width="20" height="30" rx="3" fill="#4a4e56"/>
+    <rect x="633" y="318" width="14" height="24" rx="1" fill="#2a2e36"/>
+    <circle cx="640" cy="380" r="12" fill="#4a4e56"/>
+    <circle cx="640" cy="380" r="7" fill="#2a2e36"/>
+
+    <!-- Ventilation slots -->
+    <rect x="250" y="380" width="8" height="60" rx="2" fill="#3a3e46" opacity="0.3"/>
+    <rect x="270" y="380" width="8" height="60" rx="2" fill="#3a3e46" opacity="0.3"/>
+    <rect x="290" y="380" width="8" height="60" rx="2" fill="#3a3e46" opacity="0.3"/>
+    <rect x="310" y="380" width="8" height="60" rx="2" fill="#3a3e46" opacity="0.3"/>
+    <rect x="330" y="380" width="8" height="60" rx="2" fill="#3a3e46" opacity="0.3"/>
+  </g>
+
+  <!-- Dimensions -->
+  <line x1="105" y1="480" x2="105" y2="160" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="100" y1="160" x2="125" y2="160" stroke="#e67e22" stroke-width="0.8"/>
+  <line x1="100" y1="480" x2="125" y2="480" stroke="#e67e22" stroke-width="0.8"/>
+  <text x="95" y="325" text-anchor="middle" transform="rotate(-90,95,325)" font-family="monospace" font-size="11" fill="#e67e22">320.0 mm</text>
+
+  <line x1="200" y1="500" x2="680" y2="500" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="440" y="515" text-anchor="middle" font-family="monospace" font-size="11" fill="#e67e22">480.0 mm (Width)</text>
+
+  <!-- Depth -->
+  <line x1="680" y1="240" x2="700" y2="240" stroke="#e67e22" stroke-width="0.8"/>
+  <line x1="680" y1="440" x2="700" y2="440" stroke="#e67e22" stroke-width="0.8"/>
+  <line x1="700" y1="240" x2="700" y2="440" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="710" y="345" font-family="monospace" font-size="11" fill="#e67e22">Depth: 200</text>
+
+  <!-- Spec panel -->
+  <rect x="30" y="530" width="740" height="55" rx="6" fill="#fff" stroke="#ddd" stroke-width="1" opacity="0.9"/>
+  <text x="50" y="550" font-family="monospace" font-size="11" fill="#333" font-weight="bold">SPECIFICATIONS:</text>
+  <text x="50" y="568" font-family="monospace" font-size="10" fill="#666">Material: 6061-T6 Aluminum | Finish: Hard Anodized Type III (Black) | Tolerance: ±0.05 mm | IP Rating: IP65 | Weight: 1.8 kg</text>
+  <text x="50" y="582" font-family="monospace" font-size="10" fill="#666">Process: 3-Axis CNC Milling + Turning | Surface Finish: 1.6 μm Ra | Threaded Inserts: M4 × 12 (16x)</text>
+</svg>

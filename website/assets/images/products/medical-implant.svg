@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d0d5de"/>
+      <stop offset="40%" stop-color="#e8ecf2"/>
+      <stop offset="100%" stop-color="#b0b5be"/>
+    </linearGradient>
+    <linearGradient id="tiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c4a882"/>
+      <stop offset="50%" stop-color="#d4bc9a"/>
+      <stop offset="100%" stop-color="#a88c6a"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0f2f5"/>
+      <stop offset="100%" stop-color="#e0e4ea"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="2" dy="4" stdDeviation="6" flood-opacity="0.15"/></filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#bgGrad)" rx="8"/>
+  <text x="400" y="35" text-anchor="middle" font-family="monospace" font-size="14" fill="#999">TITANIUM ORTHOPEDIC IMPLANT — Ti-6Al-4V ELI</text>
+
+  <g filter="url(#shadow)">
+    <!-- Bone plate body -->
+    <path d="M 180 300 Q 200 200 300 220 L 500 240 Q 600 250 620 300 Q 600 350 500 360 L 300 380 Q 200 400 180 300 Z"
+          fill="url(#tiGrad)" stroke="#8a7050" stroke-width="2"/>
+
+    <!-- Screw holes -->
+    <circle cx="260" cy="260" r="14" fill="#f0f2f5" stroke="#8a7050" stroke-width="1.5"/>
+    <circle cx="260" cy="260" r="6" fill="#8a7050"/>
+    <circle cx="400" cy="270" r="14" fill="#f0f2f5" stroke="#8a7050" stroke-width="1.5"/>
+    <circle cx="400" cy="270" r="6" fill="#8a7050"/>
+    <circle cx="520" cy="270" r="14" fill="#f0f2f5" stroke="#8a7050" stroke-width="1.5"/>
+    <circle cx="520" cy="270" r="6" fill="#8a7050"/>
+    <circle cx="300" cy="345" r="12" fill="#f0f2f5" stroke="#8a7050" stroke-width="1.5"/>
+    <circle cx="300" cy="345" r="5" fill="#8a7050"/>
+    <circle cx="460" cy="340" r="12" fill="#f0f2f5" stroke="#8a7050" stroke-width="1.5"/>
+    <circle cx="460" cy="340" r="5" fill="#8a7050"/>
+
+    <!-- Slot feature -->
+    <rect x="340" y="260" width="50" height="8" rx="4" fill="#f0f2f5" stroke="#8a7050" stroke-width="1"/>
+
+    <!-- Countersink detail -->
+    <circle cx="400" cy="270" r="10" fill="none" stroke="#8a7050" stroke-width="0.5" stroke-dasharray="2,2"/>
+  </g>
+
+  <!-- Cross-section view -->
+  <g transform="translate(100, 420)">
+    <text x="300" y="15" text-anchor="middle" font-family="monospace" font-size="11" fill="#999">CROSS-SECTION A-A</text>
+    <rect x="220" y="30" width="160" height="40" rx="6" fill="url(#tiGrad)" stroke="#8a7050" stroke-width="1.5"/>
+    <rect x="220" y="30" width="160" height="8" rx="3" fill="#f0f2f5" stroke="#8a7050" stroke-width="0.8"/>
+    <rect x="220" y="62" width="160" height="8" rx="3" fill="#f0f2f5" stroke="#8a7050" stroke-width="0.8"/>
+    <line x1="300" y1="70" x2="300" y2="90" stroke="#e67e22" stroke-width="0.8"/>
+    <line x1="280" y1="88" x2="320" y2="88" stroke="#e67e22" stroke-width="0.8"/>
+    <text x="300" y="102" text-anchor="middle" font-family="monospace" font-size="10" fill="#e67e22">2.8 mm</text>
+  </g>
+
+  <!-- Dimension lines -->
+  <line x1="140" y1="200" x2="140" y2="400" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="135" y1="200" x2="170" y2="200" stroke="#e67e22" stroke-width="0.8"/>
+  <line x1="135" y1="400" x2="170" y2="400" stroke="#e67e22" stroke-width="0.8"/>
+  <text x="130" y="308" text-anchor="middle" transform="rotate(-90,130,308)" font-family="monospace" font-size="11" fill="#e67e22">200.0 mm</text>
+
+  <!-- Specs panel -->
+  <rect x="560" y="430" width="210" height="140" rx="6" fill="#fff" stroke="#ddd" stroke-width="1" opacity="0.9"/>
+  <text x="575" y="455" font-family="monospace" font-size="11" fill="#333" font-weight="bold">SPECIFICATIONS</text>
+  <line x1="575" y1="462" x2="755" y2="462" stroke="#ddd" stroke-width="1"/>
+  <text x="575" y="480" font-family="monospace" font-size="10" fill="#333">Material: Ti-6Al-4V ELI</text>
+  <text x="575" y="496" font-family="monospace" font-size="10" fill="#333">Finish: 0.4 μm Ra (mirror)</text>
+  <text x="575" y="512" font-family="monospace" font-size="10" fill="#333">Tolerance: ±0.005 mm</text>
+  <text x="575" y="528" font-family="monospace" font-size="10" fill="#333">Process: Swiss Turning</text>
+  <text x="575" y="544" font-family="monospace" font-size="10" fill="#333">Class: ISO 13485 / Medical</text>
+  <text x="575" y="560" font-family="monospace" font-size="10" fill="#333">Qty: 5,000 pcs / month</text>
+</svg>

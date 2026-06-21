@@ -1,0 +1,116 @@
+/* ---- Floating Social Bar ---- */
+.social-float {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.social-float a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  transition: all 0.3s ease;
+  position: relative;
+  text-decoration: none;
+  border-radius: 0 12px 12px 0;
+  box-shadow:
+    2px 2px 8px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.social-float a:hover {
+  width: 52px;
+  box-shadow:
+    3px 3px 14px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.social-float a .social-label {
+  position: absolute;
+  left: calc(100% + 12px);
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 0.78rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s ease;
+  pointer-events: none;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.social-float a .social-label::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: #1a1a2e;
+}
+.social-float a:hover .social-label {
+  opacity: 1;
+  visibility: visible;
+}
+.social-float a svg {
+  width: 22px;
+  height: 22px;
+  fill: #fff;
+  transition: transform 0.3s ease;
+}
+.social-float a:hover svg {
+  transform: scale(1.1);
+}
+.social-fb { background: linear-gradient(180deg, #1877F2, #0d5fc7); }
+.social-fb:hover { background: linear-gradient(180deg, #1f83ff, #1877F2); }
+.social-ig { background: linear-gradient(180deg, #f58529, #dd2a7b); }
+.social-ig:hover { background: linear-gradient(180deg, #f99b4c, #e83d7c); }
+.social-tk { background: linear-gradient(180deg, #333, #000); }
+.social-tk:hover { background: linear-gradient(180deg, #444, #111); }
+.social-li { background: linear-gradient(180deg, #0A66C2, #004a91); }
+.social-li:hover { background: linear-gradient(180deg, #0d74d5, #0A66C2); }
+
+/* ---- Footer Social Icons ---- */
+.footer-social {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+.footer-social a:hover {
+  background: var(--accent);
+  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+.footer-social a svg {
+  width: 19px;
+  height: 19px;
+  fill: rgba(255,255,255,0.45);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.footer-social a:hover svg { fill: #fff; transform: scale(1.1); }
+
+@media (max-width: 768px) {
+  .social-float a .social-label { display: none; }
+  .social-float a { width: 38px; height: 38px; }
+  .social-float a svg { width: 18px; height: 18px; }
+  .social-float a:hover { width: 38px; }
+}

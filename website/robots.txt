@@ -1,0 +1,12 @@
+# robots.txt for Bangnida Precision CNC Machining
+# https://www.bangnida.com/
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.bangnida.com/sitemap.xml
+
+# Disallow admin or private directories if any
+# Disallow: /admin/
+# Disallow: /private/

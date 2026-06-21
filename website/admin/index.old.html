@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Bangnida 网站管理系统</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f0f2f5; color: #333; min-height: 100vh; display: flex; }
+:root { --primary: #0a3d7a; --primary-dark: #072a55; --primary-light: #e8f0fe; --accent: #e67e22; --accent-hover: #d35400; --sidebar-bg: #1a1d29; --sidebar-hover: #2a2d3a; --sidebar-active: #0a3d7a; --header-bg: #fff; --card-shadow: 0 2px 8px rgba(0,0,0,0.08); --border-color: #e8e8e8; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --info: #3498db; --text-muted: #888; --radius: 8px; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #999; }
+
+/* ===== LOGIN PAGE ===== */
+.login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; width: 100%; background: linear-gradient(135deg, #0a3d7a 0%, #1a5a9e 50%, #0a3d7a 100%); position: relative; overflow: hidden; }
+.login-page::before { content: ''; position: absolute; width: 600px; height: 600px; border-radius: 50%; background: rgba(255,255,255,0.03); top: -200px; right: -200px; }
+.login-page::after { content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%; background: rgba(230,126,34,0.08); bottom: -100px; left: -100px; }
+.login-box { background: #fff; border-radius: 16px; padding: 48px 40px; width: 420px; max-width: 92vw; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; z-index: 1; }
+.login-logo { text-align: center; margin-bottom: 32px; }
+.login-logo i { font-size: 48px; color: var(--primary); background: var(--primary-light); width: 80px; height: 80px; line-height: 80px; border-radius: 20px; margin-bottom: 12px; }
+.login-logo h1 { font-size: 20px; color: var(--primary); margin-top: 8px; }
+.login-logo p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+.login-form .form-group { margin-bottom: 20px; }
+.login-form label { display: block; font-size: 13px; color: #666; margin-bottom: 6px; font-weight: 500; }
+.login-form .input-wrap { position: relative; }
+.login-form .input-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 16px; }
+.login-form input[type="text"],
+.login-form input[type="password"] { width: 100%; padding: 12px 14px 12px 42px; border: 1.5px solid var(--border-color); border-radius: 8px; font-size: 14px; transition: all 0.2s; outline: none; }
+.login-form input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(10,61,122,0.1); }
+.login-form .remember-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.login-form .remember-row label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #888; cursor: pointer; margin: 0; }
+.login-form .remember-row input[type="checkbox"] { accent-color: var(--primary); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover { background: var(--accent-hover); }
+.btn-outline { background: transparent; border: 1.5px solid var(--border-color); color: #666; }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #c0392b; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-success:hover { background: #219a52; }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-block { width: 100%; padding: 13px; font-size: 15px; }
+.login-error { color: var(--danger); font-size: 13px; text-align: center; margin-top: 12px; display: none; }
+.login-error.show { display: block; }
+
+/* ===== ADMIN LAYOUT ===== */
+.admin-body { display: flex; width: 100%; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--sidebar-bg); color: #ccc; display: flex; flex-direction: column; transition: width 0.3s; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; overflow-y: auto; }
+.sidebar.collapsed { width: 64px; }
+.sidebar-logo { padding: 18px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); min-height: 60px; }
+.sidebar-logo i { font-size: 28px; color: var(--accent); flex-shrink: 0; }
+.sidebar-logo .logo-text { white-space: nowrap; overflow: hidden; }
+.sidebar-logo .logo-text h2 { font-size: 15px; color: #fff; font-weight: 600; }
+.sidebar-logo .logo-text span { font-size: 11px; color: var(--accent); }
+.sidebar.collapsed .logo-text { display: none; }
+.sidebar-menu { flex: 1; padding: 8px 0; }
+.sidebar-menu .menu-item { display: flex; align-items: center; gap: 12px; padding: 11px 16px; cursor: pointer; transition: all 0.2s; font-size: 13.5px; color: #aaa; border-left: 3px solid transparent; white-space: nowrap; overflow: hidden; }
+.sidebar-menu .menu-item:hover { background: var(--sidebar-hover); color: #eee; }
+.sidebar-menu .menu-item.active { background: rgba(10,61,122,0.3); color: #fff; border-left-color: var(--accent); }
+.sidebar-menu .menu-item i { width: 20px; text-align: center; font-size: 16px; flex-shrink: 0; }
+.sidebar.collapsed .menu-item span { display: none; }
+.sidebar.collapsed .menu-item { justify-content: center; padding: 14px 0; }
+.sidebar-footer { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+.sidebar-footer .toggle-btn { background: none; border: none; color: #888; cursor: pointer; width: 100%; padding: 8px; border-radius: 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; justify-content: center; }
+.sidebar-footer .toggle-btn:hover { background: var(--sidebar-hover); color: #ccc; }
+.sidebar.collapsed .toggle-btn span { display: none; }
+
+.main-content { flex: 1; margin-left: 240px; transition: margin-left 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
+.main-content.expanded { margin-left: 64px; }
+.header { background: #fff; padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-left h1 { font-size: 17px; color: var(--primary); font-weight: 600; }
+.header-left .page-title { font-size: 14px; color: var(--text-muted); }
+.header-right { display: flex; align-items: center; gap: 16px; }
+.header-right .user-info { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #666; }
+.header-right .user-info i { font-size: 18px; color: var(--primary); background: var(--primary-light); width: 34px; height: 34px; line-height: 34px; text-align: center; border-radius: 50%; }
+.header-right .logout-btn { background: none; border: none; color: #999; cursor: pointer; font-size: 13px; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; gap: 4px; }
+.header-right .logout-btn:hover { background: #f5f5f5; color: var(--danger); }
+
+.content-area { padding: 24px 28px; flex: 1; }
+
+/* ===== PAGE SECTIONS ===== */
+.page-section { display: none; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== CARDS ===== */
+.card { background: #fff; border-radius: var(--radius); box-shadow: var(--card-shadow); margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+.card-header h3 { font-size: 15px; font-weight: 600; color: var(--primary); }
+.card-body { padding: 20px; }
+.card-footer { padding: 12px 20px; border-top: 1px solid var(--border-color); background: #fafafa; display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ===== STAT CARDS ===== */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: #fff; border-radius: var(--radius); padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px; }
+.stat-card .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.stat-card .stat-icon.blue { background: var(--primary-light); color: var(--primary); }
+.stat-card .stat-icon.orange { background: #fef5e7; color: var(--accent); }
+.stat-card .stat-icon.green { background: #e8f8f0; color: var(--success); }
+.stat-card .stat-icon.red { background: #fde8e8; color: var(--danger); }
+.stat-card .stat-info { flex: 1; }
+.stat-card .stat-number { font-size: 26px; font-weight: 700; color: #222; }
+.stat-card .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+/* ===== QUICK ACTIONS ===== */
+.quick-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+
+/* ===== FORMS ===== */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 5px; }
+.form-group .hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.form-control { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border-color); border-radius: 6px; font-size: 13px; outline: none; transition: border-color 0.2s; font-family: inherit; }
+.form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(10,61,122,0.08); }
+textarea.form-control { min-height: 80px; resize: vertical; }
+select.form-control { appearance: auto; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+
+/* ===== TABLE ===== */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+table th, table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+table th { background: #f8f9fa; font-weight: 600; color: #555; font-size: 12px; text-transform: none; }
+table tr:hover td { background: #f8f9ff; }
+table .actions-cell { display: flex; gap: 6px; }
+table .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+table .badge.active { background: #e8f8f0; color: var(--success); }
+
+/* ===== MODAL ===== */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); z-index: 999; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+.modal-overlay.show { display: flex; }
+.modal { background: #fff; border-radius: 12px; width: 600px; max-width: 92vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: modalIn 0.25s ease; }
+@keyframes modalIn { from { opacity: 0; transform: translateY(-20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.modal-sm { width: 420px; }
+.modal-lg { width: 800px; }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+.modal-header h3 { font-size: 16px; font-weight: 600; }
+.modal-header .close-btn { background: none; border: none; font-size: 20px; color: #999; cursor: pointer; padding: 4px; line-height: 1; }
+.modal-header .close-btn:hover { color: #333; }
+.modal-body { padding: 20px; }
+.modal-footer { padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 8px; background: #fafafa; }
+
+/* ===== TOAST ===== */
+.toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: #fff; border-radius: 8px; padding: 14px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; font-size: 13px; animation: slideInRight 0.3s ease; min-width: 280px; max-width: 420px; border-left: 4px solid var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+.toast.out { animation: slideOutRight 0.3s ease forwards; }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideOutRight { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
+.toast i { font-size: 18px; }
+.toast .toast-close { margin-left: auto; background: none; border: none; color: #ccc; cursor: pointer; font-size: 14px; padding: 2px; }
+
+/* ===== CONFIRM DIALOG ===== */
+.confirm-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+.confirm-overlay.show { display: flex; }
+.confirm-box { background: #fff; border-radius: 12px; padding: 28px; width: 380px; max-width: 92vw; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+.confirm-box i { font-size: 42px; color: var(--warning); margin-bottom: 12px; }
+.confirm-box h3 { font-size: 17px; margin-bottom: 8px; }
+.confirm-box p { font-size: 13px; color: #888; margin-bottom: 20px; }
+.confirm-box .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+
+/* ===== LIST ITEMS ===== */
+.list-item { display: flex; align-items: center; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px; background: #fff; transition: box-shadow 0.2s; gap: 12px; }
+.list-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.list-item .item-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.list-item .item-icon.blue { background: var(--primary-light); color: var(--primary); }
+.list-item .item-icon.orange { background: #fef5e7; color: var(--accent); }
+.list-item .item-content { flex: 1; }
+.list-item .item-content h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.list-item .item-content p { font-size: 12px; color: var(--text-muted); }
+.list-item .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.list-item .drag-handle { cursor: grab; color: #ccc; font-size: 16px; }
+.list-item .drag-handle:active { cursor: grabbing; }
+
+/* ===== EMPTY STATE ===== */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+.empty-state i { font-size: 48px; color: #ddd; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* ===== FEATURES LIST (inline editable) ===== */
+.features-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.features-list .tag { display: inline-flex; align-items: center; gap: 4px; background: #f0f2f5; padding: 3px 10px; border-radius: 4px; font-size: 12px; }
+.features-list .tag .remove-tag { background: none; border: none; color: #999; cursor: pointer; font-size: 12px; padding: 0 2px; }
+.features-list .tag .remove-tag:hover { color: var(--danger); }
+
+/* ===== PREVIEW CARD ===== */
+.preview-card { border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+.preview-card img { width: 100%; height: 160px; object-fit: cover; display: block; background: #f5f5f5; }
+.preview-card .preview-body { padding: 12px 16px; }
+.preview-card .preview-body h4 { font-size: 14px; margin-bottom: 4px; }
+.preview-card .preview-body p { font-size: 12px; color: var(--text-muted); }
+.preview-card .preview-body .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 8px; font-size: 12px; }
+.preview-card .preview-body .specs span { color: #555; }
+
+/* ===== SETTINGS SECTION ===== */
+.settings-section { margin-bottom: 24px; }
+.settings-section h4 { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-light); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+  .sidebar { width: 64px; }
+  .sidebar .logo-text { display: none; }
+  .sidebar .menu-item span { display: none; }
+  .sidebar .menu-item { justify-content: center; padding: 14px 0; }
+  .sidebar .toggle-btn span { display: none; }
+  .main-content { margin-left: 64px; }
+  .form-row, .form-row-3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .content-area { padding: 16px; }
+  .header { padding: 0 16px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .modal { width: 96vw; max-height: 90vh; }
+  .login-box { padding: 32px 24px; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .header-left h1 { font-size: 14px; }
+  .header-right .user-info span { display: none; }
+}
+
+/* ===== HELPERS ===== */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w-full { width: 100%; }
+
+/* ===== GUIDE MODAL ===== */
+.guide-step { padding: 8px 0; display: flex; align-items: flex-start; gap: 12px; }
+.guide-step .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.guide-step p { font-size: 13px; line-height: 1.6; color: #555; }
+
+/* ===== FILES UPLOAD DISPLAY ===== */
+.file-display { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: #f5f5f5; border-radius: 4px; font-size: 12px; margin-top: 4px; }
+.file-display i { color: var(--text-muted); }
+
+/* ===== ORDER BUTTONS ===== */
+.order-btns { display: flex; flex-direction: column; gap: 2px; }
+.order-btns button { background: none; border: 1px solid var(--border-color); width: 22px; height: 18px; line-height: 14px; text-align: center; cursor: pointer; font-size: 9px; color: #999; border-radius: 2px; padding: 0; }
+.order-btns button:hover { border-color: var(--primary); color: var(--primary); }
+.order-btns button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ===== PASSWORD STRENGTH ===== */
+.pwd-hint { font-size: 12px; margin-top: 4px; }
+.pwd-hint.weak { color: var(--danger); }
+.pwd-hint.medium { color: var(--warning); }
+.pwd-hint.strong { color: var(--success); }
+</style>
+</head>
+<body>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ===== CONFIRM DIALOG ===== -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h3 id="confirmTitle">确认操作</h3>
+    <p id="confirmMessage">确定要执行此操作吗？</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">取消</button>
+      <button class="btn btn-danger" id="confirmBtn" onclick="confirmAction()">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOGIN PAGE ===== -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">
+      <i class="fas fa-cogs"></i>
+      <h1>Bangnida 网站管理系统</h1>
+      <p>Bangnida (Zhangzhou) Intelligent Technology Co., Ltd.</p>
+      <p style="font-size:12px;color:#aaa;margin-top:2px;">邦尼达（漳州）智能科技有限公司</p>
+    </div>
+    <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label>用户名</label>
+        <div class="input-wrap">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="请输入用户名" value="admin" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="请输入密码" required>
+        </div>
+      </div>
+      <div class="remember-row">
+        <label><input type="checkbox" id="rememberMe" checked> 记住登录状态</label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> 登录系统</button>
+      <div class="login-error" id="loginError">用户名或密码错误，请重试</div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div class="admin-body" id="adminPanel" style="display:none;">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <i class="fas fa-cogs"></i>
+      <div class="logo-text">
+        <h2>Bangnida 邦尼达</h2>
+        <span>智能科技 · 网站管理</span>
+      </div>
+    </div>
+    <nav class="sidebar-menu">
+      <div class="menu-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+        <i class="fas fa-chart-simple"></i><span>控制台</span>
+      </div>
+      <div class="menu-item" data-page="homepage" onclick="switchPage('homepage')">
+        <i class="fas fa-home"></i><span>首页设置</span>
+      </div>
+      <div class="menu-item" data-page="services" onclick="switchPage('services')">
+        <i class="fas fa-tools"></i><span>服务管理</span>
+      </div>
+      <div class="menu-item" data-page="industries" onclick="switchPage('industries')">
+        <i class="fas fa-industry"></i><span>行业管理</span>
+      </div>
+      <div class="menu-item" data-page="products" onclick="switchPage('products')">
+        <i class="fas fa-boxes"></i><span>产品案例管理</span>
+      </div>
+      <div class="menu-item" data-page="about" onclick="switchPage('about')">
+        <i class="fas fa-file-lines"></i><span>关于我们</span>
+      </div>
+      <div class="menu-item" data-page="contact" onclick="switchPage('contact')">
+        <i class="fas fa-address-book"></i><span>联系信息</span>
+      </div>
+      <div class="menu-item" data-page="settings" onclick="switchPage('settings')">
+        <i class="fas fa-gear"></i><span>系统设置</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i><span>收起菜单</span></button>
+    </div>
+    <div style="text-align:center;padding:12px 14px;font-size:11px;color:rgba(255,255,255,0.18);border-top:1px solid rgba(255,255,255,0.04);">
+      <i class="fas fa-cog" style="font-size:9px;margin-right:4px;opacity:0.3;"></i> 技术支持：<strong style="color:rgba(255,255,255,0.28);font-weight:500;">厦门岂胜科技有限公司</strong>
+    </div>
+  
+  
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content" id="mainContent">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <h1>Bangnida 网站管理系统</h1>
+        <span class="page-title" id="pageTitle">控制台</span>
+      </div>
+      <div style="font-size:11px;color:#999;display:none;" id="companyHeaderInfo">Bangnida (Zhangzhou) Intelligent Technology Co., Ltd. 丨 邦尼达（漳州）智能科技有限公司</div>
+      <div class="header-right">
+        <div class="user-info">
+          <i class="fas fa-user-shield"></i>
+          <span>管理员</span>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()"><i class="fas fa-right-from-bracket"></i> 退出</button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content-area">
+
+      <!-- ===== DASHBOARD ===== -->
+      <div class="page-section active" id="page-dashboard">
+        <div class="stats-grid" id="dashboardStats">
+          <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-file-lines"></i></div><div class="stat-info"><div class="stat-number" id="statPages">0</div><div class="stat-label">页面总数</div></div></div>
+          <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-tools"></i></div><div class="stat-info"><div class="stat-number" id="statServices">0</div><div class="stat-label">服务数量</div></div></div>
+          <div class="stat-card"><div class="stat-icon green"><i class="fas fa-boxes"></i></div><div class="stat-info"><div class="stat-number" id="statProducts">0</div><div class="stat-label">产品数量</div></div></div>
+          <div class="stat-card"><div class="stat-icon red"><i class="fas fa-industry"></i></div><div class="stat-info"><div class="stat-number" id="statIndustries">0</div><div class="stat-label">行业数量</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-bolt"></i> 快捷操作</h3></div>
+          <div class="card-body">
+            <div class="quick-actions">
+              <button class="btn btn-primary" onclick="switchPage('services')"><i class="fas fa-plus"></i> 添加服务</button>
+              <button class="btn btn-accent" onclick="switchPage('products')"><i class="fas fa-plus"></i> 添加产品</button>
+              <button class="btn btn-outline" onclick="switchPage('homepage')"><i class="fas fa-pen"></i> 编辑首页</button>
+              <button class="btn btn-outline" onclick="switchPage('about')"><i class="fas fa-pen"></i> 编辑关于我们</button>
+              <button class="btn btn-outline" onclick="switchPage('contact')"><i class="fas fa-pen"></i> 编辑联系信息</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-info-circle"></i> 系统信息</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:#888;">最后更新时间：<span id="lastUpdatedDisplay">尚未更新</span></p>
+            <p style="font-size:13px;color:#888;margin-top:4px;">数据存储：本地浏览器 (localStorage) · 建议定期导出备份</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== HOMEPAGE ===== -->
+      <div class="page-section" id="page-homepage">
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-pen"></i> 首页横幅设置</h3></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>主标题</label>
+              <input class="form-control" id="hpHeroTitle" placeholder="例如：精密CNC加工解决方案">
+            </div>
+            <div class="form-group">
+              <label>副标题</label>
+              <textarea class="form-control" id="hpHeroSubtitle" rows="3" placeholder="副标题描述"></textarea>
+            </div>
+            <label style="font-size:13px;font-weight:500;color:#555;margin-bottom:8px;display:block;">徽章列表（每个徽章单独编辑）</label>
+            <div id="hpBadgesContainer"></div>
+            <button class="btn btn-outline btn-sm mt-8" onclick="addBadge()"><i class="fas fa-plus"></i> 添加徽章</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-chart-bar"></i> 统计数据设置</h3></div>
+          <div class="card-body">
+            <div class="form-row" id="hpStatsContainer"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="border-top: none;">
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="saveHomepage()"><i class="fas fa-save"></i> 保存首页设置</button>
+            </div>
+                  </div>
+        <!-- ===== IMAGE UPLOAD SECTION ===== -->
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-image"></i> 图片上传</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:#888;margin-bottom:16px;">点击「选择图片」上传，系统自动保存到浏览器。上传后预览可见，保存后前台自动更新。</p>
+
+            <!-- Logo -->
+            <div style="background:#f8f9fb;border-radius:10px;padding:20px;margin-bottom:12px;border:1px dashed #ddd;">
+              <label style="font-size:14px;font-weight:600;color:#333;display:block;margin-bottom:10px;">🖼️ 网站 Logo</label>
+              <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <div style="width:100px;height:44px;background:#fff;border-radius:6px;border:1px solid #eee;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                  <img id="logoPreview" src="/assets/images/logo.svg" alt="Logo" style="max-width:90px;max-height:38px;">
+                </div>
+                <input type="file" accept="image/*" onchange="handleImageUpload('logo', this)" style="font-size:13px;">
+                <input type="hidden" id="logoPath" value="logo.svg">
+              </div>
+              <div style="font-size:11px;color:#aaa;margin-top:6px;">支持 JPG/PNG/WebP/SVG · 建议 200×60px</div>
+            </div>
+
+            <!-- Banner 1 -->
+            <div style="background:#f8f9fb;border-radius:10px;padding:20px;margin-bottom:12px;border:1px dashed #ddd;">
+              <label style="font-size:14px;font-weight:600;color:#333;display:block;margin-bottom:10px;">🎯 轮播图 1 — 加工/精度主题</label>
+              <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <div style="width:180px;height:70px;background:#fff;border-radius:6px;border:1px solid #eee;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                  <img id="banner1Preview" src="/assets/images/banner-precision.svg" alt="Banner1" style="max-width:170px;max-height:64px;">
+                </div>
+                <input type="file" accept="image/*" onchange="handleImageUpload('banner1', this)" style="font-size:13px;">
+                <input type="hidden" id="banner1Path" value="banner-precision.svg">
+              </div>
+              <div style="font-size:11px;color:#aaa;margin-top:6px;">推荐 1920×800px · 建议放产品/设备实拍图</div>
+            </div>
+
+            <!-- Banner 2 -->
+            <div style="background:#f8f9fb;border-radius:10px;padding:20px;margin-bottom:12px;border:1px dashed #ddd;">
+              <label style="font-size:14px;font-weight:600;color:#333;display:block;margin-bottom:10px;">🏭 轮播图 2 — 工厂/设施主题</label>
+              <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <div style="width:180px;height:70px;background:#fff;border-radius:6px;border:1px solid #eee;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                  <img id="banner2Preview" src="/assets/images/banner-facility.svg" alt="Banner2" style="max-width:170px;max-height:64px;">
+                </div>
+                <input type="file" accept="image/*" onchange="handleImageUpload('banner2', this)" style="font-size:13px;">
+                <input type="hidden" id="banner2Path" value="banner-facility.svg">
+              </div>
+              <div style="font-size:11px;color:#aaa;margin-top:6px;">推荐 1920×800px · 建议放工厂/团队实拍图</div>
+            </div>
+
+            <!-- Banner 3 -->
+            <div style="background:#f8f9fb;border-radius:10px;padding:20px;margin-bottom:12px;border:1px dashed #ddd;">
+              <label style="font-size:14px;font-weight:600;color:#333;display:block;margin-bottom:10px;">✅ 轮播图 3 — 质量/认证主题</label>
+              <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <div style="width:180px;height:70px;background:#fff;border-radius:6px;border:1px solid #eee;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                  <img id="banner3Preview" src="/assets/images/banner-quality.svg" alt="Banner3" style="max-width:170px;max-height:64px;">
+                </div>
+                <input type="file" accept="image/*" onchange="handleImageUpload('banner3', this)" style="font-size:13px;">
+                <input type="hidden" id="banner3Path" value="banner-quality.svg">
+              </div>
+              <div style="font-size:11px;color:#aaa;margin-top:6px;">推荐 1920×800px · 建议放检测/认证实拍图</div>
+            </div>
+          </div>
+        </div>
+
+      <!-- ===== SERVICES ===== -->
+      <div class="page-section" id="page-services">
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-tools"></i> 服务管理</h3><button class="btn btn-primary btn-sm" onclick="openServiceModal()"><i class="fas fa-plus"></i> 添加服务</button></div>
+          <div class="card-body">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th style="width:40px;"></th><th>标题</th><th>描述</th><th>特点</th><th style="width:140px;">操作</th></tr></thead>
+                <tbody id="servicesTableBody"></tbody>
+              </table>
+            </div>
+            <div id="servicesEmpty" class="empty-state" style="display:none;"><i class="fas fa-tools"></i><p>暂无服务数据，点击上方按钮添加</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== INDUSTRIES ===== -->
+      <div class="page-section" id="page-industries">
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-industry"></i> 行业管理</h3><button class="btn btn-primary btn-sm" onclick="openIndustryModal()"><i class="fas fa-plus"></i> 添加行业</button></div>
+          <div class="card-body">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>名称</th><th>描述</th><th>图标</th><th style="width:100px;">操作</th></tr></thead>
+                <tbody id="industriesTableBody"></tbody>
+              </table>
+            </div>
+            <div id="industriesEmpty" class="empty-state" style="display:none;"><i class="fas fa-industry"></i><p>暂无行业数据</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PRODUCTS ===== -->
+      <div class="page-section" id="page-products">
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-boxes"></i> 产品案例管理</h3><button class="btn btn-primary btn-sm" onclick="openProductModal()"><i class="fas fa-plus"></i> 添加产品</button></div>
+          <div class="card-body">
+            <div id="productsList"></div>
+            <div id="productsEmpty" class="empty-state" style="display:none;"><i class="fas fa-boxes"></i><p>暂无产品数据</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ABOUT ===== -->
+      <div class="page-section" id="page-about">
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-file-lines"></i> 关于我们</h3></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>公司描述</label>
+              <textarea class="form-control" id="aboutDescription" rows="4" placeholder="公司描述"></textarea>
+            </div>
+            <div class="form-group">
+              <label>使命宣言</label>
+              <textarea class="form-control" id="aboutMission" rows="3" placeholder="使命宣言"></textarea>
+            </div>
+            <div class="settings-section">
+              <h4>设施数据</h4>
+              <div class="form-row-3" id="aboutFacilityContainer"></div>
+            </div>
+            <div class="settings-section">
+              <h4>质量承诺</h4>
+              <div id="aboutQualityContainer"></div>
+              <button class="btn btn-outline btn-sm mt-8" onclick="addQualityItem()"><i class="fas fa-plus"></i> 添加承诺项</button>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="saveAbout()"><i class="fas fa-save"></i> 保存关于我们</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CONTACT ===== -->
+      <div class="page-section" id="page-contact">
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-address-book"></i> 联系信息</h3></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label>公司名称</label><input class="form-control" id="contactName" placeholder="公司名称"></div>
+              <div class="form-group"><label>地址</label><input class="form-control" id="contactAddress" placeholder="地址"></div>
+              <div class="form-group"><label>电话</label><input class="form-control" id="contactPhone" placeholder="电话"></div>
+              <div class="form-group"><label>邮箱</label><input class="form-control" id="contactEmail" placeholder="邮箱" type="email"></div>
+            </div>
+            <div class="form-group"><label>工作时间</label><input class="form-control" id="contactHours" placeholder="例如：周一至周五 8:00-18:00"></div>
+            <div class="settings-section">
+              <h4>社交媒体链接</h4>
+              <div class="form-row">
+                <div class="form-group"><label>Facebook</label><input class="form-control" id="socialFacebook" placeholder="Facebook URL"></div>
+                <div class="form-group"><label>TikTok</label><input class="form-control" id="socialTiktok" placeholder="TikTok URL"></div>
+                <div class="form-group"><label>Instagram</label><input class="form-control" id="socialInstagram" placeholder="Instagram URL"></div>
+                <div class="form-group"><label>LinkedIn</label><input class="form-control" id="socialLinkedin" placeholder="LinkedIn URL"></div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="saveContact()"><i class="fas fa-save"></i> 保存联系信息</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS ===== -->
+      <div class="page-section" id="page-settings">
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-download"></i> 数据导出</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:#888;margin-bottom:12px;">将所有数据导出为JSON文件，用于备份或迁移。</p>
+            <button class="btn btn-primary" onclick="exportData()"><i class="fas fa-download"></i> 导出数据</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-upload"></i> 数据导入</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:#888;margin-bottom:12px;">从JSON文件导入数据，将覆盖当前所有数据。</p>
+            <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importData(event)">
+            <button class="btn btn-accent" onclick="document.getElementById('importFileInput').click()"><i class="fas fa-upload"></i> 选择文件并导入</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-rotate-left"></i> 恢复默认</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:#888;margin-bottom:12px;">将所有数据重置为默认值。此操作不可撤销！</p>
+            <button class="btn btn-danger" onclick="confirmReset()"><i class="fas fa-rotate-left"></i> 恢复默认设置</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-key"></i> 修改密码</h3></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label>当前密码</label><input class="form-control" id="currentPwd" type="password" placeholder="输入当前密码"></div>
+              <div class="form-group"><label>新密码</label><input class="form-control" id="newPwd" type="password" placeholder="输入新密码" oninput="checkPwdStrength(this.value)"></div>
+              <div class="form-group"><label>确认新密码</label><input class="form-control" id="confirmPwd" type="password" placeholder="确认新密码"></div>
+            </div>
+            <div id="pwdStrength" class="pwd-hint"></div>
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="changePassword()"><i class="fas fa-key"></i> 修改密码</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-content -->
+</div>
+
+<!-- ===== SERVICE MODAL ===== -->
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal modal-lg">
+    <div class="modal-header"><h3 id="serviceModalTitle">添加服务</h3><button class="close-btn" onclick="closeModal('serviceModal')">&times;</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="serviceEditId">
+      <div class="form-group"><label>服务标题</label><input class="form-control" id="serviceTitle" placeholder="服务名称"></div>
+      <div class="form-group"><label>服务描述</label><textarea class="form-control" id="serviceDesc" rows="3" placeholder="描述"></textarea></div>
+      <div class="form-group"><label>特点列表（每行一个）</label><textarea class="form-control" id="serviceFeatures" rows="4" placeholder="特点1&#10;特点2&#10;特点3"></textarea></div>
+      <div class="form-group"><label>图片路径</label><input class="form-control" id="serviceImage" placeholder="图片文件名 如: milling.jpg"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('serviceModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveService()"><i class="fas fa-save"></i> 保存服务</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INDUSTRY MODAL ===== -->
+<div class="modal-overlay" id="industryModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="industryModalTitle">添加工行业</h3><button class="close-btn" onclick="closeModal('industryModal')">&times;</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="industryEditId">
+      <div class="form-group"><label>行业名称</label><input class="form-control" id="industryName" placeholder="行业名称"></div>
+      <div class="form-group"><label>描述</label><textarea class="form-control" id="industryDesc" rows="3" placeholder="描述"></textarea></div>
+      <div class="form-group"><label>Font Awesome 图标类名</label><input class="form-control" id="industryIcon" placeholder="例如: fa-plane"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('industryModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveIndustry()"><i class="fas fa-save"></i> 保存行业</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PRODUCT MODAL ===== -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal modal-lg">
+    <div class="modal-header"><h3 id="productModalTitle">添加产品</h3><button class="close-btn" onclick="closeModal('productModal')">&times;</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="productEditId">
+      <div class="form-row">
+        <div class="form-group"><label>产品名称</label><input class="form-control" id="productName" placeholder="产品名称"></div>
+        <div class="form-group"><label>分类</label>
+          <select class="form-control" id="productCategory">
+            <option value="Aerospace">航空航天</option>
+            <option value="Automotive">汽车制造</option>
+            <option value="Medical">医疗器械</option>
+            <option value="Industrial">工业设备</option>
+            <option value="Electronics">电子产品</option>
+            <option value="Other">其他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>描述</label><textarea class="form-control" id="productDesc" rows="2" placeholder="产品描述"></textarea></div>
+      <div class="form-group"><label>特点（每行一个）</label><textarea class="form-control" id="productFeatures" rows="3" placeholder="特点1&#10;特点2"></textarea></div>
+      <div class="form-group"><label>图片URL</label><input class="form-control" id="productImage" placeholder="图片URL"></div>
+      <div class="settings-section"><h4>规格参数</h4></div>
+      <div class="form-row-3">
+        <div class="form-group"><label>材料</label><input class="form-control" id="prodSpecMaterial" placeholder="例如: Aluminum 7075"></div>
+        <div class="form-group"><label>公差</label><input class="form-control" id="prodSpecTolerance" placeholder="例如: +/- 0.005mm"></div>
+        <div class="form-group"><label>表面处理</label><input class="form-control" id="prodSpecFinish" placeholder="例如: Anodized"></div>
+        <div class="form-group"><label>加工工艺</label><input class="form-control" id="prodSpecProcess" placeholder="例如: 5-Axis CNC"></div>
+        <div class="form-group"><label>交期</label><input class="form-control" id="prodSpecLeadTime" placeholder="例如: 2-3 weeks"></div>
+        <div class="form-group"><label>数量</label><input class="form-control" id="prodSpecQty" placeholder="例如: 1000 pcs"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('productModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveProduct()"><i class="fas fa-save"></i> 保存产品</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUICK GUIDE MODAL ===== -->
+<div class="modal-overlay" id="guideModal">
+  <div class="modal modal-sm">
+    <div class="modal-header"><h3><i class="fas fa-book" style="color:var(--accent);"></i> 快速上手指南</h3><button class="close-btn" onclick="closeModal('guideModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="guide-step"><span class="step-num">1</span><p>使用左侧菜单导航到不同管理页面</p></div>
+      <div class="guide-step"><span class="step-num">2</span><p><strong>控制台</strong> - 查看网站数据概览和快捷操作</p></div>
+      <div class="guide-step"><span class="step-num">3</span><p><strong>首页设置</strong> - 编辑横幅文字、徽章和统计数据</p></div>
+      <div class="guide-step"><span class="step-num">4</span><p><strong>服务管理</strong> - 添加/编辑/删除CNC加工服务</p></div>
+      <div class="guide-step"><span class="step-num">5</span><p><strong>行业管理</strong> - 管理服务行业分类</p></div>
+      <div class="guide-step"><span class="step-num">6</span><p><strong>产品案例管理</strong> - 添加产品案例及规格参数</p></div>
+      <div class="guide-step"><span class="step-num">7</span><p><strong>系统设置</strong> - 定期导出数据备份，防止丢失</p></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="closeModal('guideModal')">开始使用</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====================================================================
+// DATA & STATE
+// ====================================================================
+const STORAGE_KEY = 'bangnida_admin_data';
+const AUTH_KEY = 'bangnida_admin_auth';
+const DEFAULT_USER = 'admin';
+const DEFAULT_PASS = 'bangnida2026';
+
+const DEFAULT_DATA = {
+  homepage: {
+    hero: {
+      title: '精密CNC加工解决方案',
+      subtitle: 'Bangnida 提供高精度CNC铣削、车削、五轴加工、瑞士型车削及表面处理服务，服务于航空航天、汽车、医疗等高端制造行业。',
+      badges: [
+        { text: 'ISO 9001:2015 认证', icon: 'fa-certificate' },
+        { text: '公差 +/- 0.005mm', icon: 'fa-ruler' },
+        { text: '平均交货时间 3-5天', icon: 'fa-truck' }
+      ],
+      stats: [
+        { label: '年经验', value: '15+' },
+        { label: '设备数量', value: '50+' },
+        { label: '已完成项目', value: '2000+' },
+        { label: '准时交付率', value: '98.5%' }
+      ],
+      images: {}
+    }
+  },
+  services: [
+    { id: 1, title: 'CNC 铣削加工', description: '高精度3轴和4轴CNC铣削服务，适用于复杂几何形状的零件加工。配备先进的数控铣床，可处理从原型到批量生产的各种需求。', features: ['高精度加工', '复杂几何形状', '多种材料兼容', '快速交货'], image: 'cnc-milling.jpg' },
+    { id: 2, title: 'CNC 车削加工', description: '精密CNC车削服务，适用于轴类、盘类等回转体零件。我们拥有多台高性能数控车床和车铣复合加工中心。', features: ['高精度圆度', '车铣复合', '大批量生产', '严格质量控制'], image: 'cnc-turning.jpg' },
+    { id: 3, title: '五轴加工', description: '先进的5轴联动CNC加工，可一次性完成复杂零件的多面加工，减少装夹次数，提高加工精度和效率。', features: ['五轴联动', '复杂曲面加工', '减少装夹误差', '提高效率'], image: '5-axis.jpg' },
+    { id: 4, title: '瑞士型车削', description: '高精度瑞士型自动车床加工，适用于精密小型零件的批量生产。特别适合医疗器械、电子和钟表行业。', features: ['高精度小型零件', '大批量生产', '复杂外形加工', '严格的公差控制'], image: 'swiss.jpg' },
+    { id: 5, title: '表面处理', description: '全面的表面处理服务，包括阳极氧化、镀锌、镀镍、粉末喷涂、抛光等，满足不同应用场景的需求。', features: ['阳极氧化', '镀层处理', '粉末喷涂', '精密抛光'], image: 'finishing.jpg' }
+  ],
+  industries: [
+    { id: 1, name: '航空航天', description: '满足航空航天级标准的精密零件加工，通过AS9100认证体系。', icon: 'fa-plane' },
+    { id: 2, name: '汽车制造', description: '为汽车行业提供从原型到量产的全方位CNC加工服务。', icon: 'fa-car' },
+    { id: 3, name: '医疗器械', description: '符合医疗行业标准的精密零件加工，适用于手术器械和植入物。', icon: 'fa-heart-pulse' },
+    { id: 4, name: '工业设备', description: '为各类工业设备提供高精度机械零部件加工服务。', icon: 'fa-industry' }
+  ],
+  products: [
+    { id: 1, name: '飞机支架', category: 'Aerospace', description: '高强度铝合金飞机结构支架，五轴精密加工。', features: ['高强度铝合金', '五轴精密加工', '严格质量检测'], image: '', specs: { material: 'Aluminum 7075', tolerance: '+/- 0.005mm', finish: 'Anodized', process: '5-Axis CNC', leadTime: '2-3 weeks', qty: '500 pcs' } },
+    { id: 2, name: '发动机缸体', category: 'Automotive', description: '高性能铝合金发动机缸体，精密铸造后CNC加工。', features: ['精密铸造', '高精度加工', '耐高温处理'], image: '', specs: { material: 'Aluminum A356', tolerance: '+/- 0.01mm', finish: 'T6 Heat Treated', process: '4-Axis CNC', leadTime: '3-4 weeks', qty: '200 pcs' } },
+    { id: 3, name: '手术器械手柄', category: 'Medical', description: '符合人体工程学设计的手术器械手柄，采用不锈钢精密加工。', features: ['不锈钢材质', '人体工程学设计', '无菌包装'], image: '', specs: { material: 'Stainless Steel 316L', tolerance: '+/- 0.01mm', finish: 'Electropolished', process: 'Swiss Turning', leadTime: '1-2 weeks', qty: '1000 pcs' } },
+    { id: 4, name: '齿轮箱体', category: 'Industrial', description: '高精度工业齿轮箱体，适用于重型机械设备。', features: ['高强度铸铁', '精密镗孔', '耐久性测试'], image: '', specs: { material: 'Cast Iron G25', tolerance: '+/- 0.02mm', finish: 'Painted', process: '3-Axis CNC', leadTime: '4-5 weeks', qty: '50 pcs' } },
+    { id: 5, name: '散热器底板', category: 'Electronics', description: '高导热性铝合金散热器底板，用于大功率电子设备散热。', features: ['高导热性', '精密铣削', '表面处理'], image: '', specs: { material: 'Aluminum 6063', tolerance: '+/- 0.1mm', finish: 'Clear Anodized', process: 'CNC Milling', leadTime: '1 week', qty: '2000 pcs' } },
+    { id: 6, name: '精密连接器', category: 'Industrial', description: '高可靠性工业连接器外壳，精密CNC加工。', features: ['精密加工', '防腐蚀处理', 'IP67防护'], image: '', specs: { material: 'Brass C360', tolerance: '+/- 0.005mm', finish: 'Nickel Plated', process: 'Swiss Turning', leadTime: '2 weeks', qty: '5000 pcs' } }
+  ],
+  about: {
+    description: 'Bangnida 是一家专业的精密CNC加工企业，拥有超过15年的行业经验。我们致力于为全球客户提供高质量的机械加工解决方案，服务领域涵盖航空航天、汽车制造、医疗器械和工业设备等多个高端制造行业。',
+    mission: '以精湛的CNC加工技术和严格的质量控制体系，为客户提供超越期望的精密零件加工服务，助力客户产品创新与品质提升。',
+    facility: [
+      { label: '占地面积', value: '10,000 m²' },
+      { label: '设备数量', value: '50+' },
+      { label: '技术人员', value: '80+' },
+      { label: '质检人员', value: '15+' },
+      { label: '月产能', value: '500,000 pcs' },
+      { label: '通过认证', value: 'ISO 9001:2015' }
+    ],
+    quality: [
+      '100% 全尺寸检验',
+      '三坐标测量仪(CMM)检测',
+      '表面粗糙度检测',
+      '材料成分分析',
+      '硬度测试',
+      '严格批次追溯系统'
+    ]
+  },
+  contact: {
+    name: 'Bangnida Precision Manufacturing',
+    address: '广东省东莞市长安镇振安路68号',
+    phone: '+86 769 8765 4321',
+    email: 'info@bangnida.com',
+    hours: '周一至周五 8:00 - 18:00',
+    social: {
+      facebook: 'https://facebook.com/bangnida',
+      tiktok: 'https://tiktok.com/@bangnida',
+      instagram: 'https://instagram.com/bangnida',
+      linkedin: 'https://linkedin.com/company/bangnida'
+    }
+  },
+  settings: {
+    siteName: 'Bangnida',
+    language: 'zh',
+    lastUpdated: new Date().toISOString()
+  }
+};
+
+// ====================================================================
+// HELPERS
+// ====================================================================
+let appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+let confirmCallback = null;
+
+async function getData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      appData = deepMerge(JSON.parse(JSON.stringify(DEFAULT_DATA)), parsed);
+    }
+  } catch(e) {}
+  // Ensure images object exists
+  if (!appData.homepage.images) appData.homepage.images = {};
+}
+
+function deepMerge(target, source) {
+  const result = JSON.parse(JSON.stringify(target));
+  for (const key in source) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      result[key] = deepMerge(result[key] || {}, source[key]);
+    } else {
+      result[key] = source[key];
+    }
+  }
+  return result;
+}
+
+async function saveData() {
+  appData.settings.lastUpdated = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+
+  // 同步保存到 API（静默处理，不阻塞操作）
+  try {
+    const hp = appData.homepage;
+    await apiCall('PUT', '/homepage', {
+      hero_title: hp.hero.title,
+      hero_subtitle: hp.hero.subtitle,
+      badges: hp.hero.badges || [],
+      stats: hp.hero.stats || []
+    });
+  } catch(e) {
+    console.log('API save skipped (server offline)');
+  }
+}
+
+function toast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-exclamation-circle' };
+  const t = document.createElement('div');
+  t.className = 'toast' + (type !== 'success' ? ' ' + type : '');
+  t.innerHTML = '<i class="fas ' + (icons[type] || icons.success) + '" style="color:' + (type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--warning)') + '"></i> ' + message + ' <button class="toast-close" onclick="this.parentElement.classList.add(\'out\');setTimeout(()=>this.parentElement.remove(),300)">&times;</button>';
+  container.appendChild(t);
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+function showConfirm(title, message, callback) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMessage').textContent = message;
+  document.getElementById('confirmOverlay').classList.add('show');
+  confirmCallback = callback;
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+  confirmCallback = null;
+}
+
+function confirmAction() {
+  if (confirmCallback) confirmCallback();
+  closeConfirm();
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('show');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+// Close modals on overlay click
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.modal-overlay.show').forEach(el => {
+    if (e.target === el) el.classList.remove('show');
+  });
+});
+
+// ====================================================================
+// AUTH
+// ====================================================================
+async function handleLogin(e) {
+  e.preventDefault();
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value.trim();
+
+  const storedPass = localStorage.getItem('bangnida_admin_pwd') || DEFAULT_PASS;
+
+  if (user === DEFAULT_USER && pass === storedPass) {
+    if (document.getElementById('rememberMe').checked) {
+      sessionStorage.setItem(AUTH_KEY, 'true');
+      localStorage.setItem(AUTH_KEY, 'true');
+    } else {
+      sessionStorage.setItem(AUTH_KEY, 'true');
+    }
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'flex';
+    initAdmin();
+    // Show guide on first login
+    if (!localStorage.getItem('bangnida_guide_shown')) {
+      setTimeout(() => { openModal('guideModal'); localStorage.setItem('bangnida_guide_shown', 'true'); }, 500);
+    }
+  } else {
+    document.getElementById('loginError').classList.add('show');
+  }
+}
+
+function checkAuth() {
+  if (sessionStorage.getItem(AUTH_KEY) || localStorage.getItem(AUTH_KEY)) {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'flex';
+    initAdmin();
+    return true;
+  }
+  return false;
+}
+
+function handleLogout() {
+  sessionStorage.removeItem(AUTH_KEY);
+  localStorage.removeItem(AUTH_KEY);
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('username').value = 'admin';
+  document.getElementById('password').value = '';
+  document.getElementById('loginError').classList.remove('show');
+}
+
+// ====================================================================
+// SIDEBAR & NAVIGATION
+// ====================================================================
+const PAGE_TITLES = {
+  dashboard: '控制台',
+  homepage: '首页设置',
+  services: '服务管理',
+  industries: '行业管理',
+  products: '产品案例管理',
+  about: '关于我们',
+  contact: '联系信息',
+  settings: '系统设置'
+};
+
+function switchPage(page) {
+  // Hide all sections
+  document.querySelectorAll('.page-section').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  // Show target section
+  const target = document.getElementById('page-' + page);
+  if (target) {
+    target.classList.add('active');
+    target.style.display = 'block';
+  } else {
+    console.error('Page section not found: page-' + page);
+  }
+  // Update menu
+  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+  const menuItem = document.querySelector('.menu-item[data-page="' + page + '"]');
+  if (menuItem) menuItem.classList.add('active');
+  // Update title
+  const titleEl = document.getElementById('pageTitle');
+  if (titleEl) titleEl.textContent = PAGE_TITLES[page] || page;
+
+  // Refresh page data
+  if (page === 'dashboard') refreshDashboard();
+  else if (page === 'homepage') loadHomepage();
+  else if (page === 'services') renderServices();
+  else if (page === 'industries') renderIndustries();
+  else if (page === 'products') renderProducts();
+  else if (page === 'about') loadAbout();
+  else if (page === 'contact') loadContact();
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const main = document.getElementById('mainContent');
+  sidebar.classList.toggle('collapsed');
+  main.classList.toggle('expanded');
+}
+
+// ====================================================================
+// DASHBOARD
+// ====================================================================
+function refreshDashboard() {
+  document.getElementById('statPages').textContent = '6+';
+  document.getElementById('statServices').textContent = appData.services.length;
+  document.getElementById('statProducts').textContent = appData.products.length;
+  document.getElementById('statIndustries').textContent = appData.industries.length;
+  const lu = appData.settings.lastUpdated;
+  document.getElementById('lastUpdatedDisplay').textContent = lu ? new Date(lu).toLocaleString('zh-CN') : '尚未更新';
+}
+
+// ====================================================================
+// HOMEPAGE
+// ====================================================================
+function loadHomepage() {
+  const hp = appData.homepage.hero;
+  document.getElementById('hpHeroTitle').value = hp.title || '';
+  document.getElementById('hpHeroSubtitle').value = hp.subtitle || '';
+  loadImages();
+
+  // Badges
+  const bc = document.getElementById('hpBadgesContainer');
+  bc.innerHTML = '';
+  (hp.badges || []).forEach((b, i) => {
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-8 mb-8';
+    div.innerHTML = '<input class="form-control" style="flex:1;" value="' + escHtml(b.text) + '" placeholder="徽章文字" data-badge-index="' + i + '">'
+      + '<button class="btn btn-danger btn-sm" onclick="removeBadge(' + i + ')"><i class="fas fa-times"></i></button>';
+    bc.appendChild(div);
+  });
+
+  // Stats
+  const sc = document.getElementById('hpStatsContainer');
+  sc.innerHTML = '';
+  const statLabels = ['年经验', '设备数量', '已完成项目', '准时交付率'];
+  const statKeys = ['stat1', 'stat2', 'stat3', 'stat4'];
+  (hp.stats || []).forEach((s, i) => {
+    const key = statKeys[i] || 'stat' + i;
+    const label = statLabels[i] || s.label;
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    div.innerHTML = '<label>' + label + ' - 数值</label><input class="form-control" id="hpStat' + key + '" value="' + escHtml(s.value) + '" placeholder="例如: 15+">'
+      + '<input type="hidden" class="stat-label-input" value="' + escHtml(label) + '">';
+    sc.appendChild(div);
+  });
+}
+
+function addBadge() {
+  const bc = document.getElementById('hpBadgesContainer');
+  const idx = bc.children.length;
+  const div = document.createElement('div');
+  div.className = 'flex items-center gap-8 mb-8';
+  div.innerHTML = '<input class="form-control" style="flex:1;" value="" placeholder="徽章文字" data-badge-index="' + idx + '">'
+    + '<button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>';
+  bc.appendChild(div);
+}
+
+function removeBadge(index) {
+  const container = document.getElementById('hpBadgesContainer');
+  if (container.children.length > 1) {
+    container.children[index].remove();
+  } else {
+    toast('至少保留一个徽章', 'warning');
+  }
+}
+
+function saveHomepage() {
+  const hp = appData.homepage.hero;
+  hp.title = document.getElementById('hpHeroTitle').value.trim();
+  hp.subtitle = document.getElementById('hpHeroSubtitle').value.trim();
+
+  const badges = [];
+  document.querySelectorAll('#hpBadgesContainer input[data-badge-index]').forEach(inp => {
+    const v = inp.value.trim();
+    if (v) badges.push({ text: v, icon: 'fa-certificate' });
+  });
+  hp.badges = badges;
+
+  const statInputs = document.querySelectorAll('#hpStatsContainer .form-group input[type="text"], #hpStatsContainer .form-group input:not([type="hidden"])');
+  const statLabels = ['年经验', '设备数量', '已完成项目', '准时交付率'];
+  const stats = [];
+  statInputs.forEach((inp, i) => {
+    const v = inp.value.trim();
+    if (v) {
+      const labelInput = inp.closest('.form-group').querySelector('.stat-label-input');
+      stats.push({ label: (labelInput ? labelInput.value : statLabels[i] || '') || statLabels[i] || '', value: v });
+    }
+  });
+  hp.stats = stats;
+
+  saveData();
+  toast('首页设置已保存');
+  refreshDashboard();
+}
+
+// ---- Image Upload Functions ----
+async function handleImageUpload(type, input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  if (file.size > 10 * 1024 * 1024) {
+    toast('图片过大，请选择10MB以内的图片', 'error');
+    input.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    if (!appData.homepage.images) appData.homepage.images = {};
+    appData.homepage.images[type] = { data: dataUrl, name: file.name };
+    saveData();
+
+    const preview = document.getElementById(type + 'Preview');
+    if (preview) preview.src = dataUrl;
+
+    toast('上传成功：' + file.name);
+    refreshDashboard();
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function loadImages() {
+  const images = (appData.homepage.images) || {};
+  const defaultPaths = {
+    logo: '/assets/images/logo.svg',
+    banner1: '/assets/images/banner-precision.svg',
+    banner2: '/assets/images/banner-facility.svg',
+    banner3: '/assets/images/banner-quality.svg'
+  };
+  ['logo', 'banner1', 'banner2', 'banner3'].forEach(type => {
+    const preview = document.getElementById(type + 'Preview');
+    const pathInput = document.getElementById(type + 'Path');
+    if (images[type] && images[type].data && preview) {
+      preview.src = images[type].data;
+      if (pathInput) pathInput.value = images[type].name;
+    } else if (preview) {
+      preview.src = defaultPaths[type];
+      if (pathInput) pathInput.value = type === 'logo' ? 'logo.svg' : 'banner-' + type.replace('banner', '').toLowerCase() + '.svg';
+    }
+  });
+}
+
+// ====================================================================
+// SERVICES
+// ====================================================================
+function renderServices() {
+  const tbody = document.getElementById('servicesTableBody');
+  const empty = document.getElementById('servicesEmpty');
+  tbody.innerHTML = '';
+
+  if (!appData.services || appData.services.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  appData.services.forEach((s, index) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td><div class="order-btns">'
+      + '<button ' + (index === 0 ? 'disabled' : '') + ' onclick="moveService(' + s.id + ',\'up\')"><i class="fas fa-chevron-up"></i></button>'
+      + '<button ' + (index === appData.services.length - 1 ? 'disabled' : '') + ' onclick="moveService(' + s.id + ',\'down\')"><i class="fas fa-chevron-down"></i></button>'
+      + '</div></td>'
+      + '<td><strong>' + escHtml(s.title) + '</strong></td>'
+      + '<td class="truncate" style="max-width:200px;">' + escHtml(s.description.substring(0, 60) + (s.description.length > 60 ? '...' : '')) + '</td>'
+      + '<td>' + (s.features || []).slice(0, 2).map(f => '<span style="display:inline-block;background:#f0f2f5;padding:2px 8px;border-radius:4px;font-size:11px;margin:2px;">' + escHtml(f) + '</span>').join('') + '</td>'
+      + '<td class="actions-cell">'
+      + '<button class="btn btn-primary btn-sm" onclick="openServiceModal(' + s.id + ')"><i class="fas fa-pen"></i></button>'
+      + '<button class="btn btn-danger btn-sm" onclick="deleteService(' + s.id + ')"><i class="fas fa-trash"></i></button>'
+      + '</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function moveService(id, dir) {
+  const idx = appData.services.findIndex(s => s.id === id);
+  if (idx === -1) return;
+  const swap = dir === 'up' ? idx - 1 : idx + 1;
+  if (swap < 0 || swap >= appData.services.length) return;
+  [appData.services[idx], appData.services[swap]] = [appData.services[swap], appData.services[idx]];
+  saveData();
+  renderServices();
+  toast('排序已更新');
+}
+
+function openServiceModal(id) {
+  document.getElementById('serviceEditId').value = id || '';
+  if (id) {
+    const s = appData.services.find(x => x.id === id);
+    if (!s) return;
+    document.getElementById('serviceModalTitle').textContent = '编辑服务';
+    document.getElementById('serviceTitle').value = s.title || '';
+    document.getElementById('serviceDesc').value = s.description || '';
+    document.getElementById('serviceFeatures').value = (s.features || []).join('\n');
+    document.getElementById('serviceImage').value = s.image || '';
+  } else {
+    document.getElementById('serviceModalTitle').textContent = '添加服务';
+    document.getElementById('serviceTitle').value = '';
+    document.getElementById('serviceDesc').value = '';
+    document.getElementById('serviceFeatures').value = '';
+    document.getElementById('serviceImage').value = '';
+  }
+  openModal('serviceModal');
+}
+
+function saveService() {
+  const id = document.getElementById('serviceEditId').value;
+  const title = document.getElementById('serviceTitle').value.trim();
+  const desc = document.getElementById('serviceDesc').value.trim();
+  const features = document.getElementById('serviceFeatures').value.split('\n').map(s => s.trim()).filter(s => s);
+  const image = document.getElementById('serviceImage').value.trim();
+
+  if (!title) { toast('请输入服务标题', 'warning'); return; }
+  if (!desc) { toast('请输入服务描述', 'warning'); return; }
+
+  if (id) {
+    const s = appData.services.find(x => x.id === parseInt(id));
+    if (s) {
+      s.title = title; s.description = desc; s.features = features; s.image = image;
+    }
+  } else {
+    const newId = Math.max(0, ...appData.services.map(x => x.id)) + 1;
+    appData.services.push({ id: newId, title, description: desc, features, image });
+  }
+  saveData();
+  closeModal('serviceModal');
+  renderServices();
+  refreshDashboard();
+  toast(id ? '服务已更新' : '服务已添加');
+}
+
+function deleteService(id) {
+  showConfirm('删除服务', '确定要删除此服务吗？此操作不可撤销。', function() {
+    appData.services = appData.services.filter(s => s.id !== id);
+    saveData();
+    renderServices();
+    refreshDashboard();
+    toast('服务已删除');
+  });
+}
+
+// ====================================================================
+// INDUSTRIES
+// ====================================================================
+function renderIndustries() {
+  const tbody = document.getElementById('industriesTableBody');
+  const empty = document.getElementById('industriesEmpty');
+  tbody.innerHTML = '';
+
+  if (!appData.industries || appData.industries.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  appData.industries.forEach(ind => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td><strong>' + escHtml(ind.name) + '</strong></td>'
+      + '<td class="truncate" style="max-width:200px;">' + escHtml(ind.description.substring(0, 50) + (ind.description.length > 50 ? '...' : '')) + '</td>'
+      + '<td><i class="fas ' + escHtml(ind.icon || 'fa-industry') + '"></i></td>'
+      + '<td class="actions-cell">'
+      + '<button class="btn btn-primary btn-sm" onclick="openIndustryModal(' + ind.id + ')"><i class="fas fa-pen"></i></button>'
+      + '<button class="btn btn-danger btn-sm" onclick="deleteIndustry(' + ind.id + ')"><i class="fas fa-trash"></i></button>'
+      + '</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function openIndustryModal(id) {
+  document.getElementById('industryEditId').value = id || '';
+  if (id) {
+    const ind = appData.industries.find(x => x.id === id);
+    if (!ind) return;
+    document.getElementById('industryModalTitle').textContent = '编辑行业';
+    document.getElementById('industryName').value = ind.name || '';
+    document.getElementById('industryDesc').value = ind.description || '';
+    document.getElementById('industryIcon').value = ind.icon || 'fa-industry';
+  } else {
+    document.getElementById('industryModalTitle').textContent = '添加行业';
+    document.getElementById('industryName').value = '';
+    document.getElementById('industryDesc').value = '';
+    document.getElementById('industryIcon').value = 'fa-industry';
+  }
+  openModal('industryModal');
+}
+
+function saveIndustry() {
+  const id = document.getElementById('industryEditId').value;
+  const name = document.getElementById('industryName').value.trim();
+  const desc = document.getElementById('industryDesc').value.trim();
+  const icon = document.getElementById('industryIcon').value.trim() || 'fa-industry';
+
+  if (!name) { toast('请输入行业名称', 'warning'); return; }
+
+  if (id) {
+    const ind = appData.industries.find(x => x.id === parseInt(id));
+    if (ind) { ind.name = name; ind.description = desc; ind.icon = icon; }
+  } else {
+    const newId = Math.max(0, ...appData.industries.map(x => x.id)) + 1;
+    appData.industries.push({ id: newId, name, description: desc, icon });
+  }
+  saveData();
+  closeModal('industryModal');
+  renderIndustries();
+  refreshDashboard();
+  toast(id ? '行业已更新' : '行业已添加');
+}
+
+function deleteIndustry(id) {
+  showConfirm('删除行业', '确定要删除此行业吗？此操作不可撤销。', function() {
+    appData.industries = appData.industries.filter(s => s.id !== id);
+    saveData();
+    renderIndustries();
+    refreshDashboard();
+    toast('行业已删除');
+  });
+}
+
+// ====================================================================
+// PRODUCTS
+// ====================================================================
+function renderProducts() {
+  const container = document.getElementById('productsList');
+  const empty = document.getElementById('productsEmpty');
+  container.innerHTML = '';
+
+  if (!appData.products || appData.products.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const categoryLabels = { 'Aerospace': '航空航天', 'Automotive': '汽车制造', 'Medical': '医疗器械', 'Industrial': '工业设备', 'Electronics': '电子产品', 'Other': '其他' };
+
+  appData.products.forEach((p, index) => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = '<div class="drag-handle"><i class="fas fa-grip-lines"></i></div>'
+      + '<div class="item-icon blue"><i class="fas fa-cube"></i></div>'
+      + '<div class="item-content">'
+      + '<h4>' + escHtml(p.name) + ' <span style="font-size:11px;color:var(--accent);font-weight:400;">[' + (categoryLabels[p.category] || p.category) + ']</span></h4>'
+      + '<p>' + escHtml(p.description.substring(0, 80) + (p.description.length > 80 ? '...' : '')) + '</p>'
+      + '<div class="specs" style="display:flex;gap:8px;margin-top:4px;font-size:11px;color:#888;">'
+      + '<span>材料: ' + escHtml(p.specs?.material || '-') + '</span>'
+      + '<span>公差: ' + escHtml(p.specs?.tolerance || '-') + '</span>'
+      + '<span>交期: ' + escHtml(p.specs?.leadTime || '-') + '</span>'
+      + '</div></div>'
+      + '<div class="order-btns">'
+      + '<button ' + (index === 0 ? 'disabled' : '') + ' onclick="moveProduct(' + p.id + ',\'up\')"><i class="fas fa-chevron-up"></i></button>'
+      + '<button ' + (index === appData.products.length - 1 ? 'disabled' : '') + ' onclick="moveProduct(' + p.id + ',\'down\')"><i class="fas fa-chevron-down"></i></button>'
+      + '</div>'
+      + '<div class="item-actions">'
+      + '<button class="btn btn-primary btn-sm" onclick="openProductModal(' + p.id + ')"><i class="fas fa-pen"></i></button>'
+      + '<button class="btn btn-danger btn-sm" onclick="deleteProduct(' + p.id + ')"><i class="fas fa-trash"></i></button>'
+      + '</div>';
+    container.appendChild(div);
+  });
+}
+
+function moveProduct(id, dir) {
+  const idx = appData.products.findIndex(p => p.id === id);
+  if (idx === -1) return;
+  const swap = dir === 'up' ? idx - 1 : idx + 1;
+  if (swap < 0 || swap >= appData.products.length) return;
+  [appData.products[idx], appData.products[swap]] = [appData.products[swap], appData.products[idx]];
+  saveData();
+  renderProducts();
+  toast('排序已更新');
+}
+
+function openProductModal(id) {
+  document.getElementById('productEditId').value = id || '';
+  if (id) {
+    const p = appData.products.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('productModalTitle').textContent = '编辑产品';
+    document.getElementById('productName').value = p.name || '';
+    document.getElementById('productCategory').value = p.category || 'Aerospace';
+    document.getElementById('productDesc').value = p.description || '';
+    document.getElementById('productFeatures').value = (p.features || []).join('\n');
+    document.getElementById('productImage').value = p.image || '';
+    const sp = p.specs || {};
+    document.getElementById('prodSpecMaterial').value = sp.material || '';
+    document.getElementById('prodSpecTolerance').value = sp.tolerance || '';
+    document.getElementById('prodSpecFinish').value = sp.finish || '';
+    document.getElementById('prodSpecProcess').value = sp.process || '';
+    document.getElementById('prodSpecLeadTime').value = sp.leadTime || '';
+    document.getElementById('prodSpecQty').value = sp.qty || '';
+  } else {
+    document.getElementById('productModalTitle').textContent = '添加产品';
+    document.getElementById('productName').value = '';
+    document.getElementById('productCategory').value = 'Aerospace';
+    document.getElementById('productDesc').value = '';
+    document.getElementById('productFeatures').value = '';
+    document.getElementById('productImage').value = '';
+    document.getElementById('prodSpecMaterial').value = '';
+    document.getElementById('prodSpecTolerance').value = '';
+    document.getElementById('prodSpecFinish').value = '';
+    document.getElementById('prodSpecProcess').value = '';
+    document.getElementById('prodSpecLeadTime').value = '';
+    document.getElementById('prodSpecQty').value = '';
+  }
+  openModal('productModal');
+}
+
+function saveProduct() {
+  const id = document.getElementById('productEditId').value;
+  const name = document.getElementById('productName').value.trim();
+  const category = document.getElementById('productCategory').value;
+  const desc = document.getElementById('productDesc').value.trim();
+  const features = document.getElementById('productFeatures').value.split('\n').map(s => s.trim()).filter(s => s);
+  const image = document.getElementById('productImage').value.trim();
+  const specs = {
+    material: document.getElementById('prodSpecMaterial').value.trim(),
+    tolerance: document.getElementById('prodSpecTolerance').value.trim(),
+    finish: document.getElementById('prodSpecFinish').value.trim(),
+    process: document.getElementById('prodSpecProcess').value.trim(),
+    leadTime: document.getElementById('prodSpecLeadTime').value.trim(),
+    qty: document.getElementById('prodSpecQty').value.trim()
+  };
+
+  if (!name) { toast('请输入产品名称', 'warning'); return; }
+
+  if (id) {
+    const p = appData.products.find(x => x.id === parseInt(id));
+    if (p) {
+      p.name = name; p.category = category; p.description = desc; p.features = features; p.image = image; p.specs = specs;
+    }
+  } else {
+    const newId = Math.max(0, ...appData.products.map(x => x.id)) + 1;
+    appData.products.push({ id: newId, name, category, description: desc, features, image, specs });
+  }
+  saveData();
+  closeModal('productModal');
+  renderProducts();
+  refreshDashboard();
+  toast(id ? '产品已更新' : '产品已添加');
+}
+
+function deleteProduct(id) {
+  showConfirm('删除产品', '确定要删除此产品吗？此操作不可撤销。', function() {
+    appData.products = appData.products.filter(p => p.id !== id);
+    saveData();
+    renderProducts();
+    refreshDashboard();
+    toast('产品已删除');
+  });
+}
+
+// ====================================================================
+// ABOUT
+// ====================================================================
+function loadAbout() {
+  const ab = appData.about;
+  document.getElementById('aboutDescription').value = ab.description || '';
+  document.getElementById('aboutMission').value = ab.mission || '';
+
+  // Facility
+  const fc = document.getElementById('aboutFacilityContainer');
+  fc.innerHTML = '';
+  (ab.facility || []).forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    div.innerHTML = '<label>' + escHtml(f.label) + '</label><input class="form-control" value="' + escHtml(f.value) + '" data-facility-index="' + i + '" data-facility-label="' + escHtml(f.label) + '">';
+    fc.appendChild(div);
+  });
+
+  // Quality items
+  const qc = document.getElementById('aboutQualityContainer');
+  qc.innerHTML = '';
+  (ab.quality || []).forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-8 mb-8';
+    div.innerHTML = '<input class="form-control" style="flex:1;" value="' + escHtml(q) + '" placeholder="质量承诺项" data-quality-index="' + i + '">'
+      + '<button class="btn btn-danger btn-sm" onclick="removeQualityItem(' + i + ')"><i class="fas fa-times"></i></button>';
+    qc.appendChild(div);
+  });
+}
+
+function addQualityItem() {
+  const qc = document.getElementById('aboutQualityContainer');
+  const div = document.createElement('div');
+  div.className = 'flex items-center gap-8 mb-8';
+  div.innerHTML = '<input class="form-control" style="flex:1;" value="" placeholder="质量承诺项">'
+    + '<button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>';
+  qc.appendChild(div);
+}
+
+function removeQualityItem(index) {
+  const container = document.getElementById('aboutQualityContainer');
+  if (container.children.length > 1) {
+    container.children[index].remove();
+  } else {
+    toast('至少保留一个承诺项', 'warning');
+  }
+}
+
+function saveAbout() {
+  const ab = appData.about;
+  ab.description = document.getElementById('aboutDescription').value.trim();
+  ab.mission = document.getElementById('aboutMission').value.trim();
+
+  const facility = [];
+  document.querySelectorAll('#aboutFacilityContainer .form-group input').forEach(inp => {
+    const label = inp.getAttribute('data-facility-label') || '';
+    const value = inp.value.trim();
+    if (label) facility.push({ label, value });
+  });
+  ab.facility = facility;
+
+  const quality = [];
+  document.querySelectorAll('#aboutQualityContainer input').forEach(inp => {
+    const v = inp.value.trim();
+    if (v) quality.push(v);
+  });
+  ab.quality = quality;
+
+  saveData();
+  toast('关于我们已保存');
+}
+
+// ====================================================================
+// CONTACT
+// ====================================================================
+function loadContact() {
+  const c = appData.contact;
+  document.getElementById('contactName').value = c.name || '';
+  document.getElementById('contactAddress').value = c.address || '';
+  document.getElementById('contactPhone').value = c.phone || '';
+  document.getElementById('contactEmail').value = c.email || '';
+  document.getElementById('contactHours').value = c.hours || '';
+  document.getElementById('socialFacebook').value = c.social?.facebook || '';
+  document.getElementById('socialTiktok').value = c.social?.tiktok || '';
+  document.getElementById('socialInstagram').value = c.social?.instagram || '';
+  document.getElementById('socialLinkedin').value = c.social?.linkedin || '';
+}
+
+function saveContact() {
+  const c = appData.contact;
+  c.name = document.getElementById('contactName').value.trim();
+  c.address = document.getElementById('contactAddress').value.trim();
+  c.phone = document.getElementById('contactPhone').value.trim();
+  c.email = document.getElementById('contactEmail').value.trim();
+  c.hours = document.getElementById('contactHours').value.trim();
+  c.social = {
+    facebook: document.getElementById('socialFacebook').value.trim(),
+    tiktok: document.getElementById('socialTiktok').value.trim(),
+    instagram: document.getElementById('socialInstagram').value.trim(),
+    linkedin: document.getElementById('socialLinkedin').value.trim()
+  };
+  saveData();
+  toast('联系信息已保存');
+}
+
+// ====================================================================
+// SETTINGS
+// ====================================================================
+function exportData() {
+  const json = JSON.stringify(appData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const now = new Date();
+  const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  a.download = 'bangnida_backup_' + dateStr + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('数据已导出');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      showConfirm('导入数据', '导入将覆盖当前所有数据，确定继续吗？', function() {
+        appData = deepMerge(JSON.parse(JSON.stringify(DEFAULT_DATA)), data);
+        saveData();
+        toast('数据导入成功');
+        initAdmin();
+        document.getElementById('importFileInput').value = '';
+      });
+    } catch(err) {
+      toast('导入失败：文件格式不正确', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function confirmReset() {
+  showConfirm('恢复默认设置', '此操作将清除所有数据并恢复为默认值，确定继续吗？', function() {
+    appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    saveData();
+    initAdmin();
+    toast('已恢复默认设置');
+  });
+}
+
+function checkPwdStrength(pwd) {
+  const hint = document.getElementById('pwdStrength');
+  if (!pwd) { hint.textContent = ''; hint.className = 'pwd-hint'; return; }
+  let strength = 0;
+  if (pwd.length >= 8) strength++;
+  if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) strength++;
+  if (/\d/.test(pwd)) strength++;
+  if (/[^a-zA-Z0-9]/.test(pwd)) strength++;
+  const levels = ['', '弱', '中等', '强', '非常强'];
+  const classes = ['', 'weak', 'medium', 'strong', 'strong'];
+  hint.textContent = '密码强度：' + levels[strength];
+  hint.className = 'pwd-hint ' + classes[strength];
+}
+
+function changePassword() {
+  const current = document.getElementById('currentPwd').value.trim();
+  const newPwd = document.getElementById('newPwd').value.trim();
+  const confirm = document.getElementById('confirmPwd').value.trim();
+  const storedPass = localStorage.getItem('bangnida_admin_pwd') || DEFAULT_PASS;
+
+  if (!current) { toast('请输入当前密码', 'warning'); return; }
+  if (current !== storedPass) { toast('当前密码不正确', 'error'); return; }
+  if (!newPwd) { toast('请输入新密码', 'warning'); return; }
+  if (newPwd.length < 6) { toast('新密码至少6个字符', 'warning'); return; }
+  if (newPwd !== confirm) { toast('两次输入的密码不一致', 'error'); return; }
+
+  localStorage.setItem('bangnida_admin_pwd', newPwd);
+  document.getElementById('currentPwd').value = '';
+  document.getElementById('newPwd').value = '';
+  document.getElementById('confirmPwd').value = '';
+  document.getElementById('pwdStrength').textContent = '';
+  toast('密码已修改成功');
+}
+
+// ====================================================================
+// UTILITY
+// ====================================================================
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ====================================================================
+// INIT
+// ====================================================================
+async function initAdmin() {
+  try { await getData(); } catch(e) { console.log('getData error:', e); }
+  refreshDashboard();
+  renderServices();
+  renderIndustries();
+  renderProducts();
+  loadHomepage();
+  loadAbout();
+  loadContact();
+}
+
+// Auto-login
+if (!checkAuth()) {
+  // Focus password field
+  document.getElementById('password').focus();
+}
+</script>
+</body>
+</html>

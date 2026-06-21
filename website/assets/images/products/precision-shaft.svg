@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="steel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b0b5be"/>
+      <stop offset="30%" stop-color="#e0e4ea"/>
+      <stop offset="70%" stop-color="#c8ccd4"/>
+      <stop offset="100%" stop-color="#90959e"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0f2f5"/>
+      <stop offset="100%" stop-color="#e0e4ea"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.12"/></filter>
+  </defs>
+  <rect width="800" height="600" fill="url(#bgGrad)" rx="8"/>
+  <text x="400" y="35" text-anchor="middle" font-family="monospace" font-size="14" fill="#999">HIGH-PRECISION DRIVE SHAFT — 4140 ALLOY STEEL</text>
+
+  <g filter="url(#shadow)">
+    <!-- Shaft body - stepped design -->
+    <rect x="80" y="277" width="640" height="46" rx="3" fill="url(#steel)" stroke="#7a7f89" stroke-width="1.5"/>
+
+    <!-- Step 1: left end - smaller diameter -->
+    <rect x="80" y="287" width="100" height="26" rx="2" fill="#c8ccd4" stroke="#7a7f89" stroke-width="1"/>
+
+    <!-- Step 2: main body -->
+    <rect x="180" y="272" width="240" height="56" rx="4" fill="#d0d4dc" stroke="#7a7f89" stroke-width="1.5"/>
+
+    <!-- Step 3: middle reduced -->
+    <rect x="420" y="282" width="80" height="36" rx="2" fill="#b8bcc4" stroke="#7a7f89" stroke-width="1"/>
+
+    <!-- Step 4: right main -->
+    <rect x="500" y="275" width="160" height="50" rx="4" fill="#d0d4dc" stroke="#7a7f89" stroke-width="1.5"/>
+
+    <!-- Step 5: right end thread -->
+    <rect x="660" y="287" width="60" height="26" rx="2" fill="#b0b5be" stroke="#7a7f89" stroke-width="1"/>
+    <!-- Thread lines -->
+    <line x1="665" y1="290" x2="715" y2="290" stroke="#7a7f89" stroke-width="0.5"/>
+    <line x1="665" y1="295" x2="715" y2="295" stroke="#7a7f89" stroke-width="0.5"/>
+    <line x1="665" y1="300" x2="715" y2="300" stroke="#7a7f89" stroke-width="0.5"/>
+    <line x1="665" y1="305" x2="715" y2="305" stroke="#7a7f89" stroke-width="0.5"/>
+    <line x1="665" y1="310" x2="715" y2="310" stroke="#7a7f89" stroke-width="0.5"/>
+
+    <!-- Keyway -->
+    <rect x="250" y="268" width="60" height="8" rx="1" fill="#4a4e56"/>
+    <rect x="250" y="324" width="60" height="8" rx="1" fill="#4a4e56"/>
+    <text x="280" y="350" text-anchor="middle" font-family="monospace" font-size="10" fill="#e67e22">Keyway 8×4 mm</text>
+    <line x1="280" y1="340" x2="280" y2="326" stroke="#e67e22" stroke-width="0.5"/>
+  </g>
+
+  <!-- Dimension annotations -->
+  <line x1="80" y1="380" x2="720" y2="380" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="400" y="395" text-anchor="middle" font-family="monospace" font-size="11" fill="#e67e22">640.0 mm (Overall)</text>
+
+  <!-- Step dimensions -->
+  <text x="130" y="270" text-anchor="middle" font-family="monospace" font-size="10" fill="#e67e22">Ø18 × 100</text>
+  <text x="300" y="260" text-anchor="middle" font-family="monospace" font-size="10" fill="#e67e22">Ø38 × 240</text>
+  <text x="460" y="270" text-anchor="middle" font-family="monospace" font-size="10" fill="#e67e22">Ø25 × 80</text>
+  <text x="580" y="260" text-anchor="middle" font-family="monospace" font-size="10" fill="#e67e22">Ø32 × 160</text>
+
+  <!-- Tolerance badge -->
+  <rect x="530" y="410" width="240" height="75" rx="6" fill="#fff" stroke="#ddd" stroke-width="1" opacity="0.9"/>
+  <text x="540" y="432" font-family="monospace" font-size="11" fill="#333" font-weight="bold">CONCENTRICITY:</text>
+  <text x="640" y="432" font-family="monospace" font-size="11" fill="#e67e22">≤ 0.005 mm</text>
+  <text x="540" y="450" font-family="monospace" font-size="11" fill="#333" font-weight="bold">SURFACE FINISH:</text>
+  <text x="650" y="450" font-family="monospace" font-size="11" fill="#e67e22">0.4 μm Ra</text>
+  <text x="540" y="468" font-family="monospace" font-size="11" fill="#333" font-weight="bold">HARDNESS:</text>
+  <text x="624" y="468" font-family="monospace" font-size="11" fill="#e67e22">HRC 52-55</text>
+</svg>

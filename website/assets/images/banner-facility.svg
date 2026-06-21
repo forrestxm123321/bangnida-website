@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 800" width="1920" height="800">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d2b1a"/>
+      <stop offset="40%" stop-color="#0a3d2a"/>
+      <stop offset="100%" stop-color="#1a4a3c"/>
+    </linearGradient>
+    <linearGradient id="overlay2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(10,45,30,0.8)"/>
+      <stop offset="60%" stop-color="rgba(10,45,30,0.25)"/>
+      <stop offset="100%" stop-color="rgba(10,45,30,0.05)"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="800" fill="url(#bg2)"/>
+  <rect width="1920" height="800" fill="url(#overlay2)"/>
+
+  <!-- Facility building silhouette -->
+  <g stroke="rgba(255,255,255,0.05)" fill="rgba(255,255,255,0.02)" stroke-width="2">
+    <rect x="200" y="250" width="500" height="350"/>
+    <rect x="200" y="200" width="200" height="50"/>
+    <rect x="350" y="250" width="80" height="120"/>
+    <rect x="550" y="250" width="80" height="120"/>
+    <rect x="220" y="400" width="120" height="80"/>
+    <rect x="360" y="400" width="120" height="80"/>
+    <rect x="500" y="400" width="120" height="80"/>
+  </g>
+
+  <!-- Grid pattern -->
+  <g stroke="rgba(255,255,255,0.03)" stroke-width="1" fill="none">
+    <line x1="1000" y1="100" x2="1000" y2="700"/>
+    <line x1="1200" y1="100" x2="1200" y2="700"/>
+    <line x1="1400" y1="100" x2="1400" y2="700"/>
+    <line x1="1600" y1="100" x2="1600" y2="700"/>
+    <line x1="1800" y1="100" x2="1800" y2="700"/>
+    <line x1="1000" y1="200" x2="1800" y2="200"/>
+    <line x1="1000" y1="400" x2="1800" y2="400"/>
+    <line x1="1000" y1="600" x2="1800" y2="600"/>
+  </g>
+
+  <!-- Globe lines -->
+  <ellipse cx="1500" cy="400" rx="200" ry="200" stroke="rgba(230,126,34,0.08)" stroke-width="2" fill="none"/>
+  <ellipse cx="1500" cy="400" rx="200" ry="80" stroke="rgba(230,126,34,0.08)" stroke-width="1" fill="none"/>
+  <line x1="1300" y1="400" x2="1700" y2="400" stroke="rgba(230,126,34,0.08)" stroke-width="1"/>
+</svg>

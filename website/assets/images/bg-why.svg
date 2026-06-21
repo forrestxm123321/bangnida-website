@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#0a3d7a" stroke-width="0.3" opacity="0.04"/>
+    </pattern>
+    <pattern id="gears" width="120" height="120" patternUnits="userSpaceOnUse">
+      <circle cx="60" cy="60" r="25" fill="none" stroke="#e67e22" stroke-width="0.5" opacity="0.04"/>
+      <circle cx="60" cy="60" r="18" fill="none" stroke="#e67e22" stroke-width="0.3" opacity="0.03"/>
+      <circle cx="100" cy="30" r="15" fill="none" stroke="#0a3d7a" stroke-width="0.4" opacity="0.03"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="400" fill="url(#grid)"/>
+  <rect width="400" height="400" fill="url(#gears)"/>
+</svg>

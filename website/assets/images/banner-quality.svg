@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 800" width="1920" height="800">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0a2e"/>
+      <stop offset="40%" stop-color="#2a0a4a"/>
+      <stop offset="100%" stop-color="#3a1a5c"/>
+    </linearGradient>
+    <linearGradient id="overlay3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(30,10,50,0.8)"/>
+      <stop offset="60%" stop-color="rgba(30,10,50,0.25)"/>
+      <stop offset="100%" stop-color="rgba(30,10,50,0.05)"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="800" fill="url(#bg3)"/>
+  <rect width="1920" height="800" fill="url(#overlay3)"/>
+
+  <!-- Certification seal -->
+  <g stroke="rgba(255,255,255,0.05)" fill="none" stroke-width="2">
+    <circle cx="400" cy="400" r="160"/>
+    <circle cx="400" cy="400" r="140"/>
+    <circle cx="400" cy="400" r="100"/>
+    <circle cx="400" cy="400" r="50" stroke-dasharray="10,5"/>
+    <path d="M 350 400 L 400 370 L 450 420" stroke="rgba(230,126,34,0.15)" stroke-width="4"/>
+  </g>
+
+  <!-- CMM inspection graphic -->
+  <g stroke="rgba(255,255,255,0.04)" fill="none" stroke-width="2">
+    <rect x="800" y="200" width="300" height="400" rx="10"/>
+    <line x1="900" y1="200" x2="900" y2="600"/>
+    <line x1="1000" y1="200" x2="1000" y2="600"/>
+    <circle cx="950" cy="400" r="80"/>
+    <circle cx="950" cy="400" r="50"/>
+    <circle cx="950" cy="400" r="20"/>
+    <line x1="800" y1="300" x2="1100" y2="300"/>
+    <line x1="800" y1="500" x2="1100" y2="500"/>
+  </g>
+
+  <!-- Data/analytics pattern -->
+  <g stroke="rgba(255,255,255,0.03)" fill="none" stroke-width="1">
+    <rect x="1300" y="150" width="400" height="200" rx="8"/>
+    <rect x="1400" y="180" width="100" height="40" rx="4"/>
+    <rect x="1400" y="230" width="150" height="10" rx="3"/>
+    <rect x="1400" y="250" width="120" height="10" rx="3"/>
+    <rect x="1300" y="420" width="400" height="200" rx="8"/>
+    <rect x="1400" y="450" width="80" height="40" rx="4"/>
+    <rect x="1400" y="500" width="130" height="10" rx="3"/>
+    <rect x="1400" y="520" width="100" height="10" rx="3"/>
+  </g>
+
+  <!-- Small dots pattern -->
+  <g fill="rgba(255,255,255,0.03)">
+    <circle cx="200" cy="150" r="4"/>
+    <circle cx="250" cy="180" r="4"/>
+    <circle cx="300" cy="150" r="4"/>
+    <circle cx="200" cy="650" r="4"/>
+    <circle cx="280" cy="680" r="4"/>
+    <circle cx="350" cy="650" r="4"/>
+  </g>
+</svg>
