@@ -9,7 +9,9 @@
       "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(gh run *)",
-      "Bash(npx -y firecrawl-cli scrape \"https://forrestxm123321.github.io/bangnida-website/\" --format screenshot -o .firecrawl/screenshot.png --wait-for 5000)"
+      "Bash(npx -y firecrawl-cli scrape \"https://forrestxm123321.github.io/bangnida-website/\" --format screenshot -o .firecrawl/screenshot.png --wait-for 5000)",
+      "Bash(npx -y firecrawl-cli scrape \"https://forrestxm123321.github.io/bangnida-website/\" --format screenshot -o .firecrawl/screenshot2.png --wait-for 5000)",
+      "Bash(curl -s https://forrestxm123321.github.io/bangnida-website/)"
     ]
   }
 }
