@@ -4,7 +4,12 @@
       "Bash(node -e \"try{new Function\\(require\\('fs'\\).readFileSync\\('d:/my-projects/bangnida/website/admin/index.html','utf-8'\\).match\\(/<script>\\([\\\\s\\\\S]*?\\)<\\\\/script>/\\)[1]\\);console.log\\('JS: OK'\\)}catch\\(e\\){console.log\\('ERR:',e.message.substring\\(0,150\\)\\)}\")",
       "Bash(gh --version)",
       "Bash(gh auth *)",
-      "Bash(gh repo *)"
+      "Bash(gh repo *)",
+      "Bash(npx -y vercel --version)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(gh run *)",
+      "Bash(npx -y firecrawl-cli scrape \"https://forrestxm123321.github.io/bangnida-website/\" --format screenshot -o .firecrawl/screenshot.png --wait-for 5000)"
     ]
   }
 }
